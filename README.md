@@ -11,10 +11,13 @@ Feel free to pull request and fork.
 
 ##### Commands
 
-rgen container [name]
-rgen component [name]
-rgen action [name]
-rgen reducer [name]
+`rgen container [name]`
+
+`rgen component [name]`
+
+`rgen action [name]`
+
+`rgen reducer [name]`
 
 
 example:
