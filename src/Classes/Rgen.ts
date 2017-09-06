@@ -1,3 +1,8 @@
+import * as fs from "fs";
+import * as path from "path";
+
+import Utilities from "./Utilities";
+
 export default class Rgen {
     public static showManPage() {
         console.log("==========  rgen  ==========");
@@ -6,9 +11,17 @@ export default class Rgen {
 
     public static run(argv: string[]) {
         if(argv.length <= 1) {
-            console.log("Missing commands.");
+            console.log("rgen requires two arguments.");
             Rgen.showManPage();
         
+            return;
+        }
+
+        const args = Utilities.parseArguments(argv);
+        
+        if (!args.template || !args.dest) {
+            console.log("[template] or [destination] missing in rgen command.");
+
             return;
         }
     }
