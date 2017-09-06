@@ -1,21 +1,15 @@
 export default class Rgen {
-    public constructor(argv: string[]) {
-        this._arguments = argv;
-    }
-
-    public showManPage() {
+    public static showManPage() {
         console.log("==========  rgen  ==========");
         console.log("rgen [templateName] [path/name]  -  Generate a new file from a template to a path relative to the cwd.");
     }
 
-    public run() {
-        if(this._arguments.length <= 2) {
+    public static run(argv: string[]) {
+        if(argv.length <= 1) {
             console.log("Missing commands.");
-            this.showManPage();
+            Rgen.showManPage();
         
             return;
         }
     }
-
-    private readonly _arguments: string[];
 }
