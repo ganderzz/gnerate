@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export default class test extends React.Component {
+export default class ${rgen.filename} extends React.Component {
     render() {
         return (
             <div>test</div>

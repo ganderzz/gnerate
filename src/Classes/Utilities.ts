@@ -59,6 +59,15 @@ export default class Utilities {
         );
     };
 
+    public static parseTemplate(template: string, filename: string): string {
+        let name = filename.trim().replace(/^.*[\\\/]/, "");
+        if (name.indexOf(".") > -1) {
+            name = name.split(".")[0];
+        }
+        
+        return template.replace(/\$\{rgen.filename\}/g, name);
+    }
+
     public static async generate(args: IArgs) {
         const configFile = new File(args.config);
 
@@ -76,7 +85,7 @@ export default class Utilities {
         }
 
         const templateFile = await Utilities.findTemplate(configContents.templates, args.template);
-        const templateContents = await templateFile.getContents();
+        const templateContents = Utilities.parseTemplate(await templateFile.getContents(), args.dest);
 
         const output = new File("./");
         const write = await output.writeContents(args.dest, templateContents);
