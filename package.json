@@ -1,10 +1,10 @@
 {
   "name": "rgen",
   "version": "0.0.1",
-  "description": "Command-line tool for generating react",
+  "description": "Command-line tool for generating files",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "./node_modules/typescript/bin/tsc"
   },
   "keywords": [
     "rgen",
@@ -15,7 +15,9 @@
   ],
   "author": "Dylan Paulus",
   "license": "ISC",
-  "dependencies": {
-    "minimist": "^1.2.0"
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^8.0.26",
+    "typescript": "^2.5.2"
   }
 }

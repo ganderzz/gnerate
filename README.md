@@ -1,23 +1,17 @@
-## rgen
+<h1 align="center">
+    rgen
+</h1>
 
-Small project to allow me to create components/containers/actions/reducers faster from the terminals.
+Small project to speed up scaffolding of projects.
 Files get created in the current worked directory.
 
 Feel free to pull request and fork.
 
-
 ------------
-
 
 ##### Commands
 
-`rgen container [name]`
-
-`rgen component [name]`
-
-`rgen action [name]`
-
-`rgen reducer [name]`
+`rgen [template] [path/name]`
 
 
 example:
