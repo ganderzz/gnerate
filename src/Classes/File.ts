@@ -10,15 +10,23 @@ export default class File {
         return fs.existsSync(this._filename);
     }
 
-    async getJSONContents(): Promise<{ [key: string]: string }> {
-        return new Promise<{ [key: string]: string }>((resolve, reject) =>
+    private async readFile(): Promise<Buffer> {
+        return new Promise<Buffer>((resolve, reject) =>
             fs.readFile(this._filename, (error: NodeJS.ErrnoException, data: Buffer) => {
                 if (error) {
                     reject(error);
                 }
 
+                return resolve(data);
+            })
+        );
+    }
+
+    async getJSONContents(): Promise<{ [key: string]: string }> {
+        return this.readFile().then(data =>
+            new Promise<{ [key: string]: string }>((resolve, reject) => {
                 try {
-                    resolve(JSON.parse(data.toString()));
+                    return resolve(JSON.parse(data.toString()));
                 } catch(exception) {
                     reject(exception);
                 }
@@ -27,18 +35,8 @@ export default class File {
     }
 
     async getContents(): Promise<string> {
-        return new Promise<string>((resolve, reject) =>
-            fs.readFile(this._filename, (error: NodeJS.ErrnoException, data: Buffer) => {
-                if (error) {
-                    reject(error);
-                }
-
-                try {
-                    resolve(data.toString());
-                } catch(exception) {
-                    reject(exception);
-                }
-            })
+        return this.readFile().then(data =>
+            new Promise<string>(resolve => resolve(data.toString()))
         );
     }
 
