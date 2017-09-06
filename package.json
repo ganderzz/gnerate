@@ -2,7 +2,7 @@
   "name": "rgen",
   "version": "0.0.1",
   "description": "Command-line tool for generating files",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "./node_modules/typescript/bin/tsc"
   },
