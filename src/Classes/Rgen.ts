@@ -1,6 +1,3 @@
-import * as fs from "fs";
-import * as path from "path";
-
 import Utilities from "./Utilities";
 
 export default class Rgen {
@@ -24,5 +21,7 @@ export default class Rgen {
 
             return;
         }
+
+        Utilities.generate(args);
     }
 }

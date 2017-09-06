@@ -15,9 +15,12 @@
   ],
   "author": "Dylan Paulus",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "node-emoji": "^1.8.1"
+  },
   "devDependencies": {
     "@types/node": "^8.0.26",
+    "@types/node-emoji": "^1.4.0",
     "typescript": "^2.5.2"
   }
 }

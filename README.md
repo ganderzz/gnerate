@@ -2,10 +2,9 @@
     rgen
 </h1>
 
-Small project to speed up scaffolding of projects.
-Files get created in the current worked directory.
+Small project that will generate files from templates in a given location.
 
-Feel free to pull request and fork.
+**Goal:** To make generating boilerplate code easier.
 
 ------------
 
