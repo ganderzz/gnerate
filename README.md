@@ -18,6 +18,4 @@ Gnerate is a cli generation tool to help reduce boilerplate. This is achieved by
 `gnerate [template] [path/name] --config=[path/to/config.js]`
 
 
-example:
-
-`gnerate container ./MainPage.js`
+example: `gnerate container ./MainPage.js`
