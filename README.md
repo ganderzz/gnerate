@@ -8,13 +8,9 @@ Gnerate is cli a generation tool to help reduce boilerplate. This is achieved by
 
 #### Installing Gnerate
 
-Npm [local]: `npm install gnerate --save`
+**NPM:** `npm install gnerate --save`
 
-Npm [global]: `npm install gnerate -g`
-
-Yarn [local]: `yarn add gnerate`
-
-Yarn [global]: `yarn global add gnerate`
+**Yarn:** `yarn add gnerate`
 
 
 #### Commands
@@ -22,6 +18,6 @@ Yarn [global]: `yarn global add gnerate`
 `gnerate [template] [path/name] --config=[path/to/config.js]`
 
 
-example: (with a template named *container*)
+example:
 
-`gnerate container MainPage.js`
+`gnerate container ./MainPage.js`
