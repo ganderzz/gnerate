@@ -4,7 +4,7 @@
 
 ### Getting Started
 
-Gnerate is cli a generation tool to help reduce boilerplate. This is achieved by creating templates, and then referencing those templates whenever we want to create a new file.
+Gnerate is a cli generation tool to help reduce boilerplate. This is achieved by creating templates, and then referencing those templates whenever we want to create a new file.
 
 ### Installing Gnerate
 
