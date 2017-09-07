@@ -1,5 +1,5 @@
 <h1 align="center">
-    rgen
+    gnerate
 </h1>
 
 Small project that will generate files from templates in a given location.

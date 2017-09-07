@@ -1,5 +1,5 @@
 {
-  "name": "rgen",
+  "name": "gnerate",
   "version": "0.0.1",
   "description": "Command-line tool for generating files",
   "main": "./dist/index.js",

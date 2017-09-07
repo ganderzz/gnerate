@@ -1,3 +1,3 @@
-import Rgen from "./Classes/Rgen";
+import Gnerate from "./Classes/Gnerate";
 
-Rgen.run(process.argv.slice(2));
+Gnerate.run(process.argv.slice(2));
