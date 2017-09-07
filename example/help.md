@@ -1,0 +1,1 @@
+Usage: `gnerate component test.js --config=./config.js`

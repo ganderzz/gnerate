@@ -1,12 +1,13 @@
 {
   "name": "gnerate",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Command-line tool for generating files",
   "main": "./dist/index.js",
   "repository": {
     "url": "https://github.com/ganderzz/gnerate",
     "type": "git"
   },
+  "bin": "./dist/index.js",
   "scripts": {
     "build": "./node_modules/typescript/bin/tsc",
     "generate": "node ./dist/index.js component example/test.js --config=example/config.js"
