@@ -2,16 +2,26 @@
     gnerate
 </h1>
 
-Small project that will generate files from templates in a given location.
+#### Getting Started
 
-**Goal:** To make generating boilerplate code easier.
+Gnerate is cli a generation tool to help reduce boilerplate. This is achieved by creating templates, and then referencing those templates whenever we want to create a new file.
 
-------------
+#### Installing Gnerate
 
-##### Commands
+Npm [local]: `npm install gnerate --save`
 
-`gnerate [template] [path/name]`
+Npm [global]: `npm install gnerate -g`
+
+Yarn [local]: `yarn add gnerate`
+
+Yarn [global]: `yarn global add gnerate`
 
 
-example:
-`gnerate container MainPage`
+#### Commands
+
+`gnerate [template] [path/name] --config=[path/to/config.js]`
+
+
+example: (with a template named *container*)
+
+`gnerate container MainPage.js`
