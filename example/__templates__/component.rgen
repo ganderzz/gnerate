@@ -1,9 +1,9 @@
 import * as React from "react";
 
-export default class test extends React.Component {
+export default class {{ filename }} extends React.Component {
     render() {
         return (
-            <div>test</div>
+            <div>{{version}}</div>
         );
     }
 }

@@ -1,6 +1,8 @@
 import * as fs from "fs";
+import { renderString } from "nunjucks";
 import { emoji } from "node-emoji";
 
+import IConfig from "../Interfaces/IConfig";
 import File from "./File";
 
 interface IArgs {
@@ -59,29 +61,35 @@ export default class Utilities {
         );
     };
 
-    public static async generate(args: IArgs) {
-        const configFile = new File(args.config);
+    public static async getConfigContents(configPath: string): Promise<IConfig> {
+        const configFile = new File(configPath);
 
         if (!configFile.exists()) {
-            console.log(`Could not find config file: ${configFile}`);
-            return;
+            throw `Could not find config file: ${configPath}`;
         }
 
-        const configContents = await configFile.getJSONContents();
-        const templates = new File(configContents.templates);
+        return await require(configFile.toString());
+    }
+
+    public static async generate(args: IArgs) {
+        const configContents = await Utilities.getConfigContents(args.config);
+        const templates = new File(configContents.templatePath);
 
         if (!templates.exists()) {
             console.log(`Could not find templates folder: ${templates}`);
             return;
         }
 
-        const templateFile = await Utilities.findTemplate(configContents.templates, args.template);
-        const templateContents = await templateFile.getContents();
+        const templateFile = await Utilities.findTemplate(configContents.templatePath, args.template);
+        const templateContents = renderString(await templateFile.getContents(), {
+            filename: args.dest,
+            ...configContents.parameters
+        });
 
         const output = new File("./");
         const write = await output.writeContents(args.dest, templateContents);
         if (write === true) {
-            console.log(`\n\n${emoji.rocket}File ${args.dest} has been generated.\n`);
+            console.log(`\n\n${emoji.rocket} File ${args.dest} has been generated.\n`);
             return;
         }
 

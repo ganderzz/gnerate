@@ -13,7 +13,7 @@ export default class File {
     private async readFile(): Promise<Buffer> {
         return new Promise<Buffer>((resolve, reject) =>
             fs.readFile(this._filename, (error: NodeJS.ErrnoException, data: Buffer) => {
-                if (error) {
+                if (error) {  
                     reject(error);
                 }
 
@@ -22,9 +22,9 @@ export default class File {
         );
     }
 
-    async getJSONContents(): Promise<{ [key: string]: string }> {
+    async getJSONContents<T>(): Promise<T> {
         return this.readFile().then(data =>
-            new Promise<{ [key: string]: string }>((resolve, reject) => {
+            new Promise<T>((resolve, reject) => {
                 try {
                     return resolve(JSON.parse(data.toString()));
                 } catch(exception) {
