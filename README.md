@@ -10,8 +10,8 @@ Small project that will generate files from templates in a given location.
 
 ##### Commands
 
-`rgen [template] [path/name]`
+`gnerate [template] [path/name]`
 
 
 example:
-`rgen container MainPage`
+`gnerate container MainPage`
