@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import { renderString } from "nunjucks";
-import { emoji } from "node-emoji";
 
 import IConfig from "../Interfaces/IConfig";
 import File from "./File";
@@ -8,7 +7,8 @@ import File from "./File";
 interface IArgs {
     dest: string;
     template: string;
-    [key: string]: string;
+    config: string | IConfig;
+    init?: boolean;
 }
 
 export default class Utilities {
@@ -72,7 +72,10 @@ export default class Utilities {
     }
 
     public static async generate(args: IArgs) {
-        const configContents = await Utilities.getConfigContents(args.config);
+        const configContents: IConfig = typeof args.config === "string" ? 
+            await Utilities.getConfigContents(args.config) :
+            args.config;
+
         const templates = new File(configContents.templatePath);
 
         if (!templates.exists()) {
@@ -89,7 +92,7 @@ export default class Utilities {
         const output = new File("./");
         const write = await output.writeContents(args.dest, templateContents);
         if (write === true) {
-            console.log(`\n\n${emoji.rocket} File ${args.dest} has been generated.\n`);
+            console.log(`\n\nFile ${args.dest} has been generated.\n`);
             return;
         }
 

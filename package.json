@@ -22,12 +22,10 @@
   "author": "Dylan Paulus",
   "license": "ISC",
   "dependencies": {
-    "node-emoji": "^1.8.1",
     "nunjucks": "^3.0.1"
   },
   "devDependencies": {
     "@types/node": "^8.0.26",
-    "@types/node-emoji": "^1.4.0",
     "@types/nunjucks": "^0.0.33",
     "typescript": "^2.5.2"
   }
