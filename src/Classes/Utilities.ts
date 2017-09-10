@@ -71,6 +71,10 @@ export default class Utilities {
         return await require(configFile.toString());
     }
 
+    public static getFileName(filename: string): string {
+        return filename.replace(/^.*[\\\/]/, "").split(".")[0];
+    }
+
     public static async generate(args: IArgs) {
         const configContents: IConfig = typeof args.config === "string" ? 
             await Utilities.getConfigContents(args.config) :
@@ -85,7 +89,7 @@ export default class Utilities {
 
         const templateFile = await Utilities.findTemplate(configContents.templatePath, args.template);
         const templateContents = renderString(await templateFile.getContents(), {
-            filename: args.dest,
+            filename: Utilities.getFileName(args.dest),
             ...configContents.parameters
         });
 

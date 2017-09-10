@@ -48,6 +48,9 @@ class Utilities {
             return yield require(configFile.toString());
         });
     }
+    static getFileName(filename) {
+        return filename.replace(/^.*[\\\/]/, "").split(".")[0];
+    }
     static generate(args) {
         return __awaiter(this, void 0, void 0, function* () {
             const configContents = typeof args.config === "string" ?
@@ -59,7 +62,7 @@ class Utilities {
                 return;
             }
             const templateFile = yield Utilities.findTemplate(configContents.templatePath, args.template);
-            const templateContents = nunjucks_1.renderString(yield templateFile.getContents(), Object.assign({ filename: args.dest }, configContents.parameters));
+            const templateContents = nunjucks_1.renderString(yield templateFile.getContents(), Object.assign({ filename: Utilities.getFileName(args.dest) }, configContents.parameters));
             const output = new File_1.default("./");
             const write = yield output.writeContents(args.dest, templateContents);
             if (write === true) {
