@@ -1,6 +1,6 @@
 {
   "name": "gnerate",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Command-line tool for generating files",
   "main": "./dist/index.js",
   "repository": {
@@ -13,7 +13,7 @@
     "generate": "node ./dist/index.js component example/test.js --config=example/config.js"
   },
   "keywords": [
-    "rgen",
+    "gnerate",
     "react",
     "redux",
     "terminal",
