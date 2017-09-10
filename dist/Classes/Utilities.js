@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
-const nunjucks_1 = require("nunjucks");
 const File_1 = require("./File");
 class Utilities {
     static parseArguments(args) {
@@ -50,27 +49,6 @@ class Utilities {
     }
     static getFileName(filename) {
         return filename.replace(/^.*[\\\/]/, "").split(".")[0];
-    }
-    static generate(args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const configContents = typeof args.config === "string" ?
-                yield Utilities.getConfigContents(args.config) :
-                args.config;
-            const templates = new File_1.default(configContents.templatePath);
-            if (!templates.exists()) {
-                console.log(`Could not find templates folder: ${templates}`);
-                return;
-            }
-            const templateFile = yield Utilities.findTemplate(configContents.templatePath, args.template);
-            const templateContents = nunjucks_1.renderString(yield templateFile.getContents(), Object.assign({ filename: Utilities.getFileName(args.dest) }, configContents.parameters));
-            const output = new File_1.default("./");
-            const write = yield output.writeContents(args.dest, templateContents);
-            if (write === true) {
-                console.log(`\n\nFile ${args.dest} has been generated.\n`);
-                return;
-            }
-            console.log(`\nError creating file ${args.dest}: ${write.toString()}`);
-        });
     }
 }
 exports.default = Utilities;

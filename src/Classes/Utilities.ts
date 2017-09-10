@@ -1,21 +1,14 @@
 import * as fs from "fs";
-import { renderString } from "nunjucks";
 
+import IArguments from "../Interfaces/IArguments";
 import IConfig from "../Interfaces/IConfig";
 import File from "./File";
-
-interface IArgs {
-    dest: string;
-    template: string;
-    config: string | IConfig;
-    init?: boolean;
-}
 
 export default class Utilities {
 
     // @todo: Break this up into smaller functions
-    public static parseArguments(args: string[]): IArgs {
-        return args.reduce((accu: IArgs, current: string) => {
+    public static parseArguments(args: string[]): IArguments {
+        return args.reduce((accu: IArguments, current: string) => {
             // Parse out options if they exist
             // These will always lead with -- separated by = (--config=./test.config)
             if (current.indexOf("--") > -1) {
@@ -44,7 +37,7 @@ export default class Utilities {
             }
 
             return accu;
-        }, {}) as IArgs;
+        }, {}) as IArguments;
     }
 
     public static async findTemplate(templatePath: string, templateName: string) {
@@ -73,33 +66,5 @@ export default class Utilities {
 
     public static getFileName(filename: string): string {
         return filename.replace(/^.*[\\\/]/, "").split(".")[0];
-    }
-
-    public static async generate(args: IArgs) {
-        const configContents: IConfig = typeof args.config === "string" ? 
-            await Utilities.getConfigContents(args.config) :
-            args.config;
-
-        const templates = new File(configContents.templatePath);
-
-        if (!templates.exists()) {
-            console.log(`Could not find templates folder: ${templates}`);
-            return;
-        }
-
-        const templateFile = await Utilities.findTemplate(configContents.templatePath, args.template);
-        const templateContents = renderString(await templateFile.getContents(), {
-            filename: Utilities.getFileName(args.dest),
-            ...configContents.parameters
-        });
-
-        const output = new File("./");
-        const write = await output.writeContents(args.dest, templateContents);
-        if (write === true) {
-            console.log(`\n\nFile ${args.dest} has been generated.\n`);
-            return;
-        }
-
-        console.log(`\nError creating file ${args.dest}: ${write.toString()}`);
     }
 }
