@@ -2,6 +2,8 @@
     gnerate
 </h1>
 
+[![CircleCI](https://circleci.com/gh/ganderzz/gnerate/tree/master.svg?style=svg)](https://circleci.com/gh/ganderzz/gnerate/tree/master)
+
 ### Getting Started
 
 Gnerate is a cli generation tool to help reduce boilerplate. This is achieved by creating templates, and then referencing those templates whenever we want to create a new file.
