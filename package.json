@@ -10,6 +10,7 @@
   "bin": "./dist/index.js",
   "scripts": {
     "build": "./node_modules/typescript/bin/tsc",
+    "test": "./node_modules/typescript/bin/tsc & ./node_modules/.bin/ava",
     "generate": "node ./dist/index.js component example/test.js --config=example/config.js"
   },
   "keywords": [
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@types/node": "^8.0.26",
     "@types/nunjucks": "^0.0.33",
+    "ava": "^0.22.0",
     "typescript": "^2.5.2"
   }
 }

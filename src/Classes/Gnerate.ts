@@ -13,7 +13,7 @@ export default class Gnerate {
         console.log("gnerate [templateName] [path/name]  -  Generate a new file from a template to a path relative to the cwd.");
     }
 
-    public static initialize(): Promise<void> {
+    public static initialize(): Promise<boolean> {
         return Gnerate.generate({
             dest: "./gnerate.config.js",
             template: "gnerate.config",
@@ -59,19 +59,36 @@ export default class Gnerate {
             return;
         }
 
-        const templateFile = await Utilities.findTemplate(configContents.templatePath, args.template);
-        const templateContents = renderString(await templateFile.getContents(), {
-            filename: Utilities.getFileName(args.dest),
-            ...configContents.parameters
-        });
+        const template = await Gnerate.getRenderedTemplate(configContents, args);
 
+        return Gnerate.createOutputFile(args.dest, template);
+    }
+
+    public static async createOutputFile(destination: string, template: string): Promise<boolean> {
         const output = new File("./");
-        const write = await output.writeContents(args.dest, templateContents);
+        const write = await output.writeContents(destination, template);
+
         if (write === true) {
-            console.log(`\n\nFile ${args.dest} has been generated.\n`);
-            return;
+            console.log(`\n\nFile ${destination} has been generated.\n`);
+
+            return true;
         }
 
-        console.log(`\nError creating file ${args.dest}: ${write.toString()}`);
+        console.log(`\nError creating file ${destination}: ${write.toString()}`);
+
+        return false;
+    }
+
+    public static async getRenderedTemplate(config: IConfig, args: IArguments): Promise<string> {
+        try {
+            const templateFile = await Utilities.findTemplate(config.templatePath, args.template);
+            
+            return renderString(await templateFile.getContents(), {
+                filename: Utilities.getFileName(args.dest),
+                ...config.parameters
+            });
+        } catch {
+            throw `Could not find or render the template ${config.templatePath} ${args.template}.`;
+        }   
     }
 }

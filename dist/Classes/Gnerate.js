@@ -54,15 +54,31 @@ class Gnerate {
                 console.log(`Could not find templates folder: ${templates}`);
                 return;
             }
-            const templateFile = yield Utilities_1.default.findTemplate(configContents.templatePath, args.template);
-            const templateContents = nunjucks_1.renderString(yield templateFile.getContents(), Object.assign({ filename: Utilities_1.default.getFileName(args.dest) }, configContents.parameters));
+            const template = yield Gnerate.getRenderedTemplate(configContents, args);
+            return Gnerate.createOutputFile(args.dest, template);
+        });
+    }
+    static createOutputFile(destination, template) {
+        return __awaiter(this, void 0, void 0, function* () {
             const output = new File_1.default("./");
-            const write = yield output.writeContents(args.dest, templateContents);
+            const write = yield output.writeContents(destination, template);
             if (write === true) {
-                console.log(`\n\nFile ${args.dest} has been generated.\n`);
-                return;
+                console.log(`\n\nFile ${destination} has been generated.\n`);
+                return true;
             }
-            console.log(`\nError creating file ${args.dest}: ${write.toString()}`);
+            console.log(`\nError creating file ${destination}: ${write.toString()}`);
+            return false;
+        });
+    }
+    static getRenderedTemplate(config, args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const templateFile = yield Utilities_1.default.findTemplate(config.templatePath, args.template);
+                return nunjucks_1.renderString(yield templateFile.getContents(), Object.assign({ filename: Utilities_1.default.getFileName(args.dest) }, config.parameters));
+            }
+            catch (_a) {
+                throw `Could not find or render the template ${config.templatePath} ${args.template}.`;
+            }
         });
     }
 }
