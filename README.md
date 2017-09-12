@@ -19,7 +19,7 @@ Gnerate is a cli generation tool to help reduce boilerplate. This is achieved by
 
 `gnerate --init` - Generates a config file in the current working directory.
 
-`gnerate [template] [path/name] --config=[path/to/config.js]` - Generates a template to a path/name location.
+`gnerate [template] [path/name] --config=[path/to/config.js]` - Generates a template to a path/name location. The config argument is optional. If no config is given, generate will look for a directory named `__templates__` in the root of the project.
 
 
 example: `gnerate container ./MainPage.js`
