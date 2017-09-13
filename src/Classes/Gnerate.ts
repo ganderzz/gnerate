@@ -72,8 +72,6 @@ export default class Gnerate {
             }
         }
 
-        console.log(templatePath, args.template)
-
         const template = await Gnerate.getTemplateString(templatePath, args);
 
         const renderedTemplate = renderString(template, Object.assign({}, {

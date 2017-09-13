@@ -65,7 +65,6 @@ class Gnerate {
                     throw "Could not find a __templates__ directory, or config file containing templates path.";
                 }
             }
-            console.log(templatePath, args.template);
             const template = yield Gnerate.getTemplateString(templatePath, args);
             const renderedTemplate = nunjucks_1.renderString(template, Object.assign({}, {
                 filename: Utilities_1.default.getFileName(args.dest),
