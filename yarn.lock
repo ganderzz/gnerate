@@ -6,13 +6,7 @@
   version "20.0.8"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-20.0.8.tgz#7f8c97f73d20d3bf5448fbe33661a342002b5954"
 
-"@types/mock-fs@^3.6.30":
-  version "3.6.30"
-  resolved "https://registry.yarnpkg.com/@types/mock-fs/-/mock-fs-3.6.30.tgz#4d812541e87b23577261a5aa95f704dd3d01e410"
-  dependencies:
-    "@types/node" "*"
-
-"@types/node@*", "@types/node@^8.0.26":
+"@types/node@^8.0.26":
   version "8.0.28"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.28.tgz#86206716f8d9251cf41692e384264cbd7058ad60"
 
@@ -1678,10 +1672,6 @@ minimist@^1.1.1, minimist@^1.2.0, minimist@~1.2.0:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
-
-mock-fs@^4.4.1:
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-4.4.1.tgz#f285fa025b42a4031faf75b66f632b21e7056683"
 
 ms@2.0.0:
   version "2.0.0"
