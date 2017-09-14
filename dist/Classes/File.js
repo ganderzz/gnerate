@@ -17,7 +17,7 @@ class File {
     exists() {
         return fs.existsSync(this._filename);
     }
-    readFile() {
+    _readFile() {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => fs.readFile(this._filename, (error, data) => {
                 if (error) {
@@ -29,7 +29,7 @@ class File {
     }
     getJSONContents() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.readFile().then(data => new Promise((resolve, reject) => {
+            return this._readFile().then(data => new Promise((resolve, reject) => {
                 try {
                     return resolve(JSON.parse(data.toString()));
                 }
@@ -41,13 +41,13 @@ class File {
     }
     getContents() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.readFile().then(data => new Promise(resolve => resolve(data.toString())));
+            return this._readFile().then(data => new Promise(resolve => resolve(data.toString())));
         });
     }
-    writeContents(filename, data) {
+    writeContents(data) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                fs.writeFile(`${this._filename}/${filename}`, data, (error) => {
+                fs.writeFile(`${this._filename}`, data, (error) => {
                     if (error) {
                         reject(error);
                     }

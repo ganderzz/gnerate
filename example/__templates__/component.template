@@ -3,7 +3,7 @@ import * as React from "react";
 export default class {{ filename }} extends React.Component {
     render() {
         return (
-            <div>{{version}}</div>
+            <div>{{version}} {{fileExtension}}</div>
         );
     }
 }
