@@ -10,7 +10,7 @@
   "bin": "./dist/index.js",
   "scripts": {
     "build": "./node_modules/typescript/bin/tsc",
-    "test": "./node_modules/typescript/bin/tsc & ./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/jest",
     "generate": "./node_modules/typescript/bin/tsc & node ./dist/index.js component example/test.js --config=example/config.js"
   },
   "keywords": [
@@ -27,13 +27,11 @@
   },
   "devDependencies": {
     "@types/jest": "^20.0.8",
-    "@types/mock-fs": "^3.6.30",
     "@types/node": "^8.0.26",
     "@types/nunjucks": "^0.0.33",
     "eslint": "^4.6.1",
     "eslint-config-prettier": "^2.4.0",
     "jest": "^21.0.2",
-    "mock-fs": "^4.4.1",
     "prettier": "^1.6.1",
     "ts-jest": "^21.0.0",
     "typescript": "^2.5.2"
