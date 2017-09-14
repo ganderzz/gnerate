@@ -1,6 +1,6 @@
 {
   "name": "gnerate",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Command-line tool for generating files",
   "main": "./dist/index.js",
   "repository": {
