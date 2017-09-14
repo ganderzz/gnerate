@@ -1,4 +1,3 @@
-import * as mock from "mock-fs";
 import File from "../File";
 
 jest.mock("fs", () => ({

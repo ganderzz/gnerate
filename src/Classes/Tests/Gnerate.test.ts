@@ -1,4 +1,3 @@
-import * as mock from "mock-fs";
 import Gnerate from "../Gnerate";
 
 describe("Testing Gnerate Class", () => {
