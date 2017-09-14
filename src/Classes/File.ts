@@ -2,59 +2,91 @@ import * as fs from "fs";
 import * as path from "path";
 
 export default class File {
-    public constructor(filename: string) {
-        this._filename = path.resolve(filename);
-    }
+  public constructor(filename: string) {
+    this._filename = path.resolve(filename);
+  }
 
-    public exists(): boolean {
-        return fs.existsSync(this._filename);
-    }
+  /**
+     * Check if the file exists
+     * 
+     * @return {boolean}
+     */
+  public exists(): boolean {
+    return fs.existsSync(this._filename);
+  }
 
-    private async readFile(): Promise<Buffer> {
-        return new Promise<Buffer>((resolve, reject) =>
-            fs.readFile(this._filename, (error: NodeJS.ErrnoException, data: Buffer) => {
-                if (error) {  
-                    reject(error);
-                }
+  /**
+     * Node implementation of reading a file.
+     * Both getJSONContents() and getContents() use this
+     * as a base method.
+     * 
+     * @return {Promise<Buffer>}
+     */
+  private async _readFile(): Promise<Buffer> {
+    return new Promise<Buffer>((resolve, reject) =>
+      fs.readFile(this._filename, (error: NodeJS.ErrnoException, data: Buffer) => {
+        if (error) {
+          reject(error);
+        }
 
-                return resolve(data);
-            })
-        );
-    }
+        return resolve(data);
+      })
+    );
+  }
 
-    async getJSONContents<T>(): Promise<T> {
-        return this.readFile().then(data =>
-            new Promise<T>((resolve, reject) => {
-                try {
-                    return resolve(JSON.parse(data.toString()));
-                } catch(exception) {
-                    reject(exception);
-                }
-            })
-        );
-    }
+  /**
+     * Gets the contents of a file, and attempts
+     * to parse it as JSON
+     * 
+     * @return {Promise<T>}
+     */
+  async getJSONContents<T>(): Promise<T> {
+    return this._readFile().then(
+      data =>
+        new Promise<T>((resolve, reject) => {
+          try {
+            return resolve(JSON.parse(data.toString()));
+          } catch (exception) {
+            reject(exception);
+          }
+        })
+    );
+  }
 
-    async getContents(): Promise<string> {
-        return this.readFile().then(data =>
-            new Promise<string>(resolve => resolve(data.toString()))
-        );
-    }
+  /**
+     * Gets the contents of a file
+     * 
+     * @return {Promise<string>}
+     */
+  async getContents(): Promise<string> {
+    return this._readFile().then(data => new Promise<string>(resolve => resolve(data.toString())));
+  }
 
-    async writeContents(filename: string, data: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            fs.writeFile(`${this._filename}/${filename}`, data, (error: NodeJS.ErrnoException) => {
-                if (error) {
-                    reject(error);
-                }
+  /**
+     * Write data to the a location
+     * 
+     * @param data 
+     * 
+     * @return {Promise<boolean>}
+     */
+  async writeContents(data: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      fs.writeFile(`${this._filename}`, data, (error: NodeJS.ErrnoException) => {
+        if (error) {
+          reject(error);
+        }
 
-                resolve(true);
-            });
-        });
-    }
+        resolve(true);
+      });
+    });
+  }
 
-    public toString(): string {
-        return this._filename.toString();
-    }
+  /**
+     * Returns the filePath/fileName as a string
+     */
+  public toString(): string {
+    return this._filename.toString();
+  }
 
-    private readonly _filename: string;
+  private readonly _filename: string;
 }

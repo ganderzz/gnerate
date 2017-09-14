@@ -38,17 +38,17 @@ class Utilities {
         });
     }
     ;
-    static getConfigContents(configPath) {
+    static getFileContents(filePath) {
         return __awaiter(this, void 0, void 0, function* () {
-            const configFile = new File_1.default(configPath);
-            if (!configFile.exists()) {
-                throw `Could not find config file: ${configPath}`;
+            const file = new File_1.default(filePath);
+            if (!file.exists()) {
+                throw `Could not find file: ${filePath}`;
             }
-            return yield require(configFile.toString());
+            return yield require(file.toString());
         });
     }
-    static getFileName(filename) {
-        return filename.replace(/^.*[\\\/]/, "").split(".")[0];
+    static getFileNameAndExtension(filename) {
+        return filename.replace(/^.*[\\\/]/, "").split(".");
     }
 }
 exports.default = Utilities;

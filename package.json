@@ -29,7 +29,10 @@
     "@types/jest": "^20.0.8",
     "@types/node": "^8.0.26",
     "@types/nunjucks": "^0.0.33",
+    "eslint": "^4.6.1",
+    "eslint-config-prettier": "^2.4.0",
     "jest": "^21.0.2",
+    "prettier": "^1.6.1",
     "ts-jest": "^21.0.0",
     "typescript": "^2.5.2"
   },
