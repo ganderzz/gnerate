@@ -62,7 +62,7 @@ export default class Utilities {
         const foundFile = files.filter(name => name.indexOf(templateName) > -1);
 
         if (foundFile.length === 0 || foundFile.length > 1) {
-          reject(`Could not resolve the template name ${templateName} given at ${templatePath}`);
+          reject(`Could not resolve the template '${templateName}' given at ${templatePath}`);
         }
 
         resolve(new File(`${templatePath}/${foundFile[0]}`));

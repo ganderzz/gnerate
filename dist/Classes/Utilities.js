@@ -31,13 +31,12 @@ class Utilities {
             return new Promise((resolve, reject) => fs.readdir(templatePath, (error, files) => {
                 const foundFile = files.filter(name => name.indexOf(templateName) > -1);
                 if (foundFile.length === 0 || foundFile.length > 1) {
-                    reject(`Could not resolve the template name ${templateName} given at ${templatePath}`);
+                    reject(`Could not resolve the template '${templateName}' given at ${templatePath}`);
                 }
                 resolve(new File_1.default(`${templatePath}/${foundFile[0]}`));
             }));
         });
     }
-    ;
     static getFileContents(filePath) {
         return __awaiter(this, void 0, void 0, function* () {
             const file = new File_1.default(filePath);
