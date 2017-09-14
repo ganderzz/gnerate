@@ -5,4 +5,6 @@ export default interface IArguments {
   template: string;
   config: string | IConfig;
   init?: boolean;
+  templatePath?: string;
+  [index: string]: string | boolean | IConfig;
 };

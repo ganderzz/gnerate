@@ -100,7 +100,7 @@ export default class Gnerate {
           filename: fileParts[0],
           fileExtension: fileParts[1],
         },
-        configContents && configContents.parameters
+        this.getAdditionalParameters(configContents, args)
       )
     );
 
@@ -115,6 +115,41 @@ export default class Gnerate {
   }
 
   /**
+   * Get additional parameters for nunjucks
+   * to pass into the template as variables
+   * 
+   * @param config 
+   * @param args 
+   * 
+   * @return {{ [key: string]: string }}
+   */
+  private static getAdditionalParameters(
+    config: IConfig,
+    args: IArguments
+  ): { [key: string]: string } {
+      const additionalParams = config && config.parameters || {};
+
+      const argParams = Object.keys(args).reduce((accu: { [key: string]: string}, item: string) => {
+        // Only pull out additional parameter
+        // arguments from the cli
+        // @todo: Find a cleaner way to get it from the interface?
+        if (
+            item !== "config" &&
+            item !== "templatePath" &&
+            item !== "init" &&
+            item !== "template" &&
+            item !== "dist"
+        ) {
+            accu[item] = args[item] as string;
+        }
+        
+        return accu;
+      }, {});
+
+      return Object.assign({}, additionalParams, argParams);
+  }
+
+  /**
      * Gets the contents of the template component. (precompiled)
      * 
      * @param configContents 
@@ -126,23 +161,44 @@ export default class Gnerate {
     configContents: IConfig,
     args: IArguments
   ): Promise<string> {
+    // Our default templatePath will pull from the config file
+    // if we have found one.
     let templatePath = configContents && configContents.templatePath;
 
+    // Invert if?
     if (!templatePath) {
-      const getDirectories = (source: string) =>
-        readdirSync(source).map(name => join(source, name));
-
-      const path = resolve(process.cwd(), "__templates__");
-      const foundTemplates = getDirectories(path);
-
-      if (foundTemplates && foundTemplates.length > 0) {
-        templatePath = path;
+      if (args.templatePath) {
+        // Use the templatePath provided by the terminal
+        // before attempting to automatically find a __templates__
+        // directory.
+        templatePath = args.templatePath;
       } else {
-        throw "Could not find a __templates__ directory, or config file containing templates path.";
+        // If config doesn't have a templatePath, try to automatically resolve
+        // the templatePath.
+        templatePath = this.resolveTemplatePath();
       }
     }
 
     return Gnerate.getTemplateString(templatePath, args);
+  }
+
+  /**
+   * Attempt to find a __templates__ directory
+   * in the root of the project.
+   * 
+   * @return {string} The template file contents
+   */
+  private static resolveTemplatePath(): string {
+    const getDirectories = (source: string) => readdirSync(source).map(name => join(source, name));
+
+    const path = resolve(process.cwd(), "__templates__");
+    const foundTemplates = getDirectories(path);
+
+    if (!foundTemplates || foundTemplates.length > 1) {
+      throw "Could not find a __templates__ directory, or config file containing templates path.";
+    }
+
+    return path;
   }
 
   /**
@@ -191,7 +247,7 @@ export default class Gnerate {
       return await templateFile.getContents();
     } catch (exception) {
       throw `
-                Could not find or render the template ${templatePath} ${args.template}.
+                Could not find the template: ${templatePath}/${args.template}.
                 [Error]: ${exception}
             `;
     }

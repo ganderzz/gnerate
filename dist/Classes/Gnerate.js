@@ -25,7 +25,7 @@ class Gnerate {
             template: "gnerate.config",
             config: {
                 templatePath: path_1.resolve(__dirname, "../..", "__templates__"),
-            }
+            },
         });
     }
     static run(argv) {
@@ -67,7 +67,7 @@ class Gnerate {
             const renderedTemplate = nunjucks_1.renderString(template, Object.assign({}, {
                 filename: fileParts[0],
                 fileExtension: fileParts[1],
-            }, configContents && configContents.parameters));
+            }, this.getAdditionalParameters(configContents, args)));
             try {
                 yield Gnerate.writeToDestination(renderedTemplate, args.dest);
             }
@@ -78,30 +78,49 @@ class Gnerate {
             console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
         });
     }
+    static getAdditionalParameters(config, args) {
+        const additionalParams = config && config.parameters || {};
+        const argParams = Object.keys(args).reduce((accu, item) => {
+            if (item !== "config" &&
+                item !== "templatePath" &&
+                item !== "init" &&
+                item !== "template" &&
+                item !== "dist") {
+                accu[item] = args[item];
+            }
+            return accu;
+        }, {});
+        return Object.assign({}, additionalParams, argParams);
+    }
     static getTemplateContents(configContents, args) {
         return __awaiter(this, void 0, void 0, function* () {
             let templatePath = configContents && configContents.templatePath;
             if (!templatePath) {
-                const getDirectories = (source) => fs_1.readdirSync(source).map(name => path_1.join(source, name));
-                const path = path_1.resolve(process.cwd(), "__templates__");
-                const foundTemplates = getDirectories(path);
-                if (foundTemplates && foundTemplates.length > 0) {
-                    templatePath = path;
+                if (args.templatePath) {
+                    templatePath = args.templatePath;
                 }
                 else {
-                    throw "Could not find a __templates__ directory, or config file containing templates path.";
+                    templatePath = this.resolveTemplatePath();
                 }
             }
             return Gnerate.getTemplateString(templatePath, args);
         });
     }
+    static resolveTemplatePath() {
+        const getDirectories = (source) => fs_1.readdirSync(source).map(name => path_1.join(source, name));
+        const path = path_1.resolve(process.cwd(), "__templates__");
+        const foundTemplates = getDirectories(path);
+        if (!foundTemplates || foundTemplates.length > 1) {
+            throw "Could not find a __templates__ directory, or config file containing templates path.";
+        }
+        return path;
+    }
     static getConfigContents(config) {
         return __awaiter(this, void 0, void 0, function* () {
             let configContents = null;
             if (config) {
-                configContents = typeof config === "string" ?
-                    yield Utilities_1.default.getFileContents(config) :
-                    config;
+                configContents =
+                    typeof config === "string" ? yield Utilities_1.default.getFileContents(config) : config;
             }
             return configContents;
         });
@@ -120,7 +139,7 @@ class Gnerate {
             }
             catch (exception) {
                 throw `
-                Could not find or render the template ${templatePath} ${args.template}.
+                Could not find the template: ${templatePath}/${args.template}.
                 [Error]: ${exception}
             `;
             }
