@@ -1,0 +1,15 @@
+title: Gnerate
+description: >- 
+  CLI that reduces boilerplate in projects
+baseurl: ""
+url: ""
+
+permalink: pretty
+
+markdown: kramdown
+plugins:
+  - jekyll-feed
+
+sass:
+  sass_dir: _sass
+  style: compressed

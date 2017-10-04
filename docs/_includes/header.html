@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Boilerplate made bearable">
+    <meta name="keywords" content="node, javascript, software, code, programming, {{page.category}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{site.title}}{% if page.title %} - {{ page.title }}{% endif %}</title>
+    {% capture styles %}
+        {% include styles.scss %}
+    {% endcapture %}
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css" integrity="sha384-dNpIIXE8U05kAbPhy3G1cz+yZmTzA6CY8Vg/u2L9xRnHjJiAK76m2BIEaSEV+/aU" crossorigin="anonymous">
+    <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" type="text/css" rel="stylesheet" />
+    <style>
+        {{ styles | scssify }}
+    </style>
+</head>
+<body>
+
+<main class="container">
+    {% if page.id == "home" %}
+        <header class="row main__header">
+            <div class="twelve columns">
+                <h1>Gnerate</h1>
+
+                <span class="muted">
+                    JavaScript file generation
+                </span>
+
+                <div>
+                    <a href="/docs" class="documentation__btn">
+                        Documentation
+                    </a>
+                </div>
+
+                <div class="external__links">
+                    <a href="https://github.com/ganderzz/gnerate">
+                        <i class="fa fa-github"></i>
+                        Github
+                    </a>
+                </div>
+            </div>
+        </header>
+    {% endif %}
