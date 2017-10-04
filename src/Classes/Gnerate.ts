@@ -82,14 +82,34 @@ export default class Gnerate {
       return;
     }
 
-    let template: string;
+    // templatePath coming from the terminal has
+    // the heighest priority
+    let templatePath = args.templatePath;
+
+    if (!templatePath) {
+      // If the terminal doesn't contain a templatePath, check the config file
+      templatePath = configContents && configContents.templatePath;
+    }
+    if(!templatePath) {
+      // If neither the terminal or config file have the template
+      // directory path, try to find a __templates__ directory ourselves
+      templatePath = this.resolveTemplatePath();
+    }
+
+    const parameters = configContents && configContents.parameters || {};
+    const template = await Gnerate.getTemplateString(templatePath, args.template);
+
     try {
-      template = await this.getTemplateContents(configContents, args);
+      Gnerate.generateFileFromTemplate(template, parameters, args);
     } catch (exception) {
       console.log(exception.toString());
       return;
     }
 
+    console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
+  }
+
+  private static async generateFileFromTemplate(template: string, parameters: {}, args: IArguments) {
     const fileParts = Utilities.getFileNameAndExtension(args.dest);
 
     const renderedTemplate = renderString(
@@ -100,18 +120,15 @@ export default class Gnerate {
           filename: fileParts[0],
           fileExtension: fileParts[1],
         },
-        this.getAdditionalParameters(configContents, args)
+        this.getAdditionalParameters(parameters, args)
       )
     );
 
     try {
       await Gnerate.writeToDestination(renderedTemplate, args.dest);
     } catch (exception) {
-      console.log(`[Error]: ${exception.toString()}`);
-      return;
+      throw exception;
     }
-
-    console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
   }
 
   /**
@@ -124,11 +141,9 @@ export default class Gnerate {
    * @return {{ [key: string]: string }}
    */
   private static getAdditionalParameters(
-    config: IConfig,
+    params: { [key: string]: string },
     args: IArguments
   ): { [key: string]: string } {
-      const additionalParams = config && config.parameters || {};
-
       const argParams = Object.keys(args).reduce((accu: { [key: string]: string}, item: string) => {
         // Only pull out additional parameter
         // arguments from the cli
@@ -146,40 +161,7 @@ export default class Gnerate {
         return accu;
       }, {});
 
-      return Object.assign({}, additionalParams, argParams);
-  }
-
-  /**
-     * Gets the contents of the template component. (precompiled)
-     * 
-     * @param configContents 
-     * @param args 
-     * 
-     * @return {Promise<string>}
-     */
-  public static async getTemplateContents(
-    configContents: IConfig,
-    args: IArguments
-  ): Promise<string> {
-    // Our default templatePath will pull from the config file
-    // if we have found one.
-    let templatePath = configContents && configContents.templatePath;
-
-    // Invert if?
-    if (!templatePath) {
-      if (args.templatePath) {
-        // Use the templatePath provided by the terminal
-        // before attempting to automatically find a __templates__
-        // directory.
-        templatePath = args.templatePath;
-      } else {
-        // If config doesn't have a templatePath, try to automatically resolve
-        // the templatePath.
-        templatePath = this.resolveTemplatePath();
-      }
-    }
-
-    return Gnerate.getTemplateString(templatePath, args);
+      return Object.assign({}, params, argParams);
   }
 
   /**
@@ -240,14 +222,14 @@ export default class Gnerate {
      * 
      * @return {Promise<string>} The template as a string
      */
-  public static async getTemplateString(templatePath: string, args: IArguments): Promise<string> {
+  public static async getTemplateString(templatePath: string, templateName: string): Promise<string> {
     try {
-      const templateFile = await Utilities.findTemplate(templatePath, args.template);
+      const templateFile = await Utilities.findTemplate(templatePath, templateName);
 
       return await templateFile.getContents();
     } catch (exception) {
       throw `
-                Could not find the template: ${templatePath}/${args.template}.
+                Could not find the template: ${templatePath}/${templateName}.
                 [Error]: ${exception}
             `;
     }

@@ -55,31 +55,41 @@ class Gnerate {
                 console.log(exception.toString());
                 return;
             }
-            let template;
+            let templatePath = args.templatePath;
+            if (!templatePath) {
+                templatePath = configContents && configContents.templatePath;
+            }
+            if (!templatePath) {
+                templatePath = this.resolveTemplatePath();
+            }
+            const parameters = configContents && configContents.parameters || {};
+            const template = yield Gnerate.getTemplateString(templatePath, args.template);
             try {
-                template = yield this.getTemplateContents(configContents, args);
+                Gnerate.generateFileFromTemplate(template, parameters, args);
             }
             catch (exception) {
                 console.log(exception.toString());
                 return;
             }
+            console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
+        });
+    }
+    static generateFileFromTemplate(template, parameters, args) {
+        return __awaiter(this, void 0, void 0, function* () {
             const fileParts = Utilities_1.default.getFileNameAndExtension(args.dest);
             const renderedTemplate = nunjucks_1.renderString(template, Object.assign({}, {
                 filename: fileParts[0],
                 fileExtension: fileParts[1],
-            }, this.getAdditionalParameters(configContents, args)));
+            }, this.getAdditionalParameters(parameters, args)));
             try {
                 yield Gnerate.writeToDestination(renderedTemplate, args.dest);
             }
             catch (exception) {
-                console.log(`[Error]: ${exception.toString()}`);
-                return;
+                throw exception;
             }
-            console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
         });
     }
-    static getAdditionalParameters(config, args) {
-        const additionalParams = config && config.parameters || {};
+    static getAdditionalParameters(params, args) {
         const argParams = Object.keys(args).reduce((accu, item) => {
             if (item !== "config" &&
                 item !== "templatePath" &&
@@ -90,21 +100,7 @@ class Gnerate {
             }
             return accu;
         }, {});
-        return Object.assign({}, additionalParams, argParams);
-    }
-    static getTemplateContents(configContents, args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let templatePath = configContents && configContents.templatePath;
-            if (!templatePath) {
-                if (args.templatePath) {
-                    templatePath = args.templatePath;
-                }
-                else {
-                    templatePath = this.resolveTemplatePath();
-                }
-            }
-            return Gnerate.getTemplateString(templatePath, args);
-        });
+        return Object.assign({}, params, argParams);
     }
     static resolveTemplatePath() {
         const getDirectories = (source) => fs_1.readdirSync(source).map(name => path_1.join(source, name));
@@ -131,15 +127,15 @@ class Gnerate {
             return yield output.writeContents(template);
         });
     }
-    static getTemplateString(templatePath, args) {
+    static getTemplateString(templatePath, templateName) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const templateFile = yield Utilities_1.default.findTemplate(templatePath, args.template);
+                const templateFile = yield Utilities_1.default.findTemplate(templatePath, templateName);
                 return yield templateFile.getContents();
             }
             catch (exception) {
                 throw `
-                Could not find the template: ${templatePath}/${args.template}.
+                Could not find the template: ${templatePath}/${templateName}.
                 [Error]: ${exception}
             `;
             }
