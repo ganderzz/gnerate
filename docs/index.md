@@ -1,3 +1,3 @@
-#### Setting Up Gnerate
-
-*Coming soon*
+---
+layout: homepage
+---
