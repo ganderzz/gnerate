@@ -11,6 +11,7 @@
     {% endcapture %}
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> 
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css" integrity="sha384-dNpIIXE8U05kAbPhy3G1cz+yZmTzA6CY8Vg/u2L9xRnHjJiAK76m2BIEaSEV+/aU" crossorigin="anonymous">
     <link href="https://unpkg.com/normalize.css@7.0.0/normalize.css" type="text/css" rel="stylesheet" />
     <style>
         {{ styles | scssify }}
@@ -19,22 +20,27 @@
 <body>
 
 <main class="container">
-    <header class="row">
-        <div class="twelve columns">
-            <h1>Gnerate</h1>
+    {% if page.id == "home" %}
+        <header class="row main__header">
+            <div class="twelve columns">
+                <h1>Gnerate</h1>
 
-            <span class="muted">
-                JavaScript file generation
-            </span>
+                <span class="muted">
+                    JavaScript file generation
+                </span>
 
-            <div>
-                <a href="#" class="documentation__btn disabled">
-                    Documentation
-                </a>
+                <div>
+                    <a href="/docs" class="documentation__btn">
+                        Documentation
+                    </a>
+                </div>
+
+                <div class="external__links">
+                    <a href="https://github.com/ganderzz/gnerate">
+                        <i class="fa fa-github"></i>
+                        Github
+                    </a>
+                </div>
             </div>
-
-            <div class="external__links">
-                <a href="https://github.com/ganderzz/gnerate">Github</a>
-            </div>
-        </div>
-    </header>
+        </header>
+    {% endif %}
