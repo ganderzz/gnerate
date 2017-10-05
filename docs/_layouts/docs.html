@@ -1,0 +1,25 @@
+{% include header.html %}
+
+{% include docsHeader.html %}
+
+<main class="container" style="flex-direction: row;">
+    <aside class="sidebar">
+        {% include docsNav.html %}
+    </aside>
+
+    <section class="post">
+        <div class="post__info">
+            <h1>{{ page.title }}</h1>
+
+            <div class="description">
+                {{ page.description }}
+            </div>
+        </div>
+
+        <div class="post__content">
+            {{ content }}
+        </div>
+    </section>
+</main>
+
+{% include footer.html %}
