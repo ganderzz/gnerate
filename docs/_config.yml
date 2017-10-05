@@ -8,7 +8,7 @@ permalink: pretty
 
 defaults:
 - scope:
-    path: _docs
+    path: docs
     type: pages
   values:
     layout: docs
@@ -17,7 +17,6 @@ defaults:
 markdown: kramdown
 plugins:
   - jekyll-feed
-  - jekyll-redirect-from
 
 sass:
   sass_dir: _sass
