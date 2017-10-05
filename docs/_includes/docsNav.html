@@ -1,0 +1,14 @@
+{% for node in site.data.docsNav %}
+    <div class="nav__docs">
+        <h3>{{ node.title }}</h3>
+        <ul>
+            {% for item in node.items %}
+            <li>
+                <a href="{{site.url}}/docs/{{ item.title | strip | lowercase | split: ' ' | join: '-'}}">
+                    {{ item.title }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endfor %}
