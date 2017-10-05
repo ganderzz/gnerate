@@ -1,8 +1,7 @@
 ---
 layout: docs
 id: docs
-redirect_to:
-  - /docs/getting-started
+
 ---
 
 <center style="margin-top: 30px;">

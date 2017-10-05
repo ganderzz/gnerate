@@ -2,8 +2,6 @@
 layout: docs
 title: Getting Started
 description: Getting started using Gnerate
-redirect_from:
-    - /docs
 ---
 
 ------
