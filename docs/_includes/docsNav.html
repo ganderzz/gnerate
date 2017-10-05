@@ -4,7 +4,7 @@
         <ul>
             {% for item in node.items %}
             <li>
-                <a href="{{site.url}}/docs/{{ item.title | strip | lowercase | split: ' ' | join: '-'}}">
+                <a href="{{site.url}}/docs/{{ item.title | strip | downcase | split: ' ' | join: '-'}}">
                     {{ item.title }}
                 </a>
             </li>
