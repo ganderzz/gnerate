@@ -151,6 +151,8 @@ header {
         padding: 0;
 
         a {
+            display: block;
+            margin: 10px 0 0 10px;
             color: #444;
             font-size: 0.9rem;
             text-decoration: underline;
@@ -168,6 +170,16 @@ header {
     padding: 40px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, .11), 0 1px 3px rgba(0, 0, 0, .08);
     background: #FFF;
+
+    a {
+        color: #858CCC;
+        text-decoration: underline;
+    }
+
+    .highlight {
+        background: #F1F1F1;
+        padding: 2px 5px;
+    }
 }
 
 .post__info {

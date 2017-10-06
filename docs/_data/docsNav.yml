@@ -1,4 +1,6 @@
-- title: Quick Start
+- title: Walkthrough
   items:
     - id: gettingStarted
       title: Getting Started
+    - id: creatingTemplates
+      title: Creating Templates
