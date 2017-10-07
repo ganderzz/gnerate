@@ -1,0 +1,9 @@
+docs/*
+examples/*
+src/*
+.circleci/*
+
+.eslintrc.json
+.prettierrc
+tsconfig.json
+yarn.lock
