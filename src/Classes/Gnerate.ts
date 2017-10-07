@@ -6,6 +6,7 @@ import File from "./File";
 
 import IArguments from "../Interfaces/IArguments";
 import IConfig from "../Interfaces/IConfig";
+import IAlias from "../Interfaces/IAlias";
 
 export default class Gnerate {
   // #region Static Methods
@@ -102,48 +103,86 @@ export default class Gnerate {
       templatePath = this.resolveTemplatePath();
     }
 
-    let templatesToGenerate = [args.template];
-    const aliaskeys = configContents.alias;
+    const params = this.createParameters(
+      configContents && configContents.parameters || {},
+      args
+    );
 
     if (configContents.alias && configContents.alias[args.template]) {
-      templatesToGenerate = configContents.alias[args.template];
+      this.generateFromAlias(configContents.alias[args.template], templatePath, params, args.dest);
+
+      return;
     }
 
-    templatesToGenerate.forEach(async item => {
-      const parameters = configContents && configContents.parameters || {};
-      const template = await Gnerate.getTemplateString(templatePath, item);
+    const template = await Gnerate.getTemplateString(templatePath, args.template);
+    this.generateFileFromTemplate(template, params, args.dest);
+
+    console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
+  }
+
+  /**
+   * Create parameters for template, merging user and
+   * Gnerate provided params
+   * 
+   * @param parameters 
+   * @param args 
+   */
+  private static createParameters(parameters: {}, args: IArguments) {
+    const fileParts = Utilities.getFileNameAndExtension(args.dest);
+
+    return Object.assign(
+      {},
+      {
+        filename: fileParts[0],
+        fileExtension: fileParts[1],
+      },
+      this.getAdditionalParameters(parameters, args)
+    )
+  }
+
+  /**
+   * Generate file from a template
+   * 
+   * @param template 
+   * @param parameters 
+   * @param dest 
+   */
+  private static async generateFileFromTemplate(template: string, parameters: {}, dest: string) {
+    const renderedTemplate = renderString(template, parameters);
+
+    try {
+      await Gnerate.writeToDestination(renderedTemplate, dest);
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  /**
+   * Loop through the provided aliases, and generate templates
+   * for each one
+   * 
+   * @param templatesToGenerate 
+   * @param templatePath 
+   * @param params 
+   * @param dest 
+   */
+  private static generateFromAlias(templatesToGenerate: IAlias, templatePath: string, params: {}, dest: string) {
+    const items = Object.keys(templatesToGenerate);
+    
+    items.forEach(async key => {
+      const template = await Gnerate.getTemplateString(templatePath, key);
+      const filename = templatesToGenerate[key].filename;
+      const fileParts = Utilities.getFileNameAndExtension(filename);
   
       try {
-        Gnerate.generateFileFromTemplate(template, parameters, args);
+        Gnerate.generateFileFromTemplate(template, params, dest + filename);
+
+        console.log(`\tFile ${dest + filename} has been sucessfully generated!`);
       } catch (exception) {
         console.log(exception.toString());
         return;
       }
     });
-
-    console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
-  }
-
-  private static async generateFileFromTemplate(template: string, parameters: {}, args: IArguments) {
-    const fileParts = Utilities.getFileNameAndExtension(args.dest);
-
-    const renderedTemplate = renderString(
-      template,
-      Object.assign(
-        {},
-        {
-          filename: fileParts[0],
-          fileExtension: fileParts[1],
-        },
-        this.getAdditionalParameters(parameters, args)
-      )
-    );
-
-    try {
-      await Gnerate.writeToDestination(renderedTemplate, args.dest);
-    } catch (exception) {
-      throw exception;
-    }
   }
 
   /**

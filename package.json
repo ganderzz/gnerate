@@ -11,7 +11,7 @@
   "scripts": {
     "build": "./node_modules/typescript/bin/tsc",
     "test": "./node_modules/.bin/jest",
-    "generate": "./node_modules/typescript/bin/tsc & node ./dist/index.js base example/test.js --config=example/config.js --param=3 --keysCanBeAnything=additionalParam"
+    "generate": "./node_modules/typescript/bin/tsc & node ./dist/index.js base example/ --config=example/gnerate.config.js --param=3 --keysCanBeAnything=additionalParam"
   },
   "keywords": [
     "gnerate",
