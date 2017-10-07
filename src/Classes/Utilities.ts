@@ -5,6 +5,7 @@ import IConfig from "../Interfaces/IConfig";
 import File from "./File";
 
 export default class Utilities {
+  // #region Static Methods
   /**
      * Parses arguments, and returns as a json representation
      * 
@@ -95,4 +96,5 @@ export default class Utilities {
   public static getFileNameAndExtension(filename: string): string[] {
     return filename.replace(/^.*[\\\/]/, "").split(".");
   }
+  // #endregion
 }

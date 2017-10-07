@@ -8,6 +8,7 @@ import IArguments from "../Interfaces/IArguments";
 import IConfig from "../Interfaces/IConfig";
 
 export default class Gnerate {
+  // #region Static Methods
   /**
      * Show instructions on how to use Gnerate
      */
@@ -32,6 +33,9 @@ export default class Gnerate {
         templatePath: resolve(__dirname, "../..", "__templates__"),
       },
     });
+
+    File.createDirectory("./__templates__");
+    console.log("\tDirectory __templates__ has been sucessfully generated!");
   }
 
   /**
@@ -234,4 +238,5 @@ export default class Gnerate {
             `;
     }
   }
+  // #endregion
 }

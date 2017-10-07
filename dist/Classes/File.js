@@ -17,16 +17,6 @@ class File {
     exists() {
         return fs.existsSync(this._filename);
     }
-    _readFile() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => fs.readFile(this._filename, (error, data) => {
-                if (error) {
-                    reject(error);
-                }
-                return resolve(data);
-            }));
-        });
-    }
     getJSONContents() {
         return __awaiter(this, void 0, void 0, function* () {
             return this._readFile().then(data => new Promise((resolve, reject) => {
@@ -58,6 +48,21 @@ class File {
     }
     toString() {
         return this._filename.toString();
+    }
+    _readFile() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => fs.readFile(this._filename, (error, data) => {
+                if (error) {
+                    reject(error);
+                }
+                return resolve(data);
+            }));
+        });
+    }
+    static createDirectory(directoryName) {
+        if (!fs.existsSync(directoryName)) {
+            fs.mkdirSync(directoryName);
+        }
     }
 }
 exports.default = File;
