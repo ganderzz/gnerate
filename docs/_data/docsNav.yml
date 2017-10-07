@@ -1,3 +1,7 @@
+- title: Command Line
+  items:
+    - id: commands
+      title: Commands
 - title: Walkthrough
   items:
     - id: gettingStarted
