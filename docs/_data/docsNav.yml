@@ -2,6 +2,10 @@
   items:
     - id: commands
       title: Commands
+- title: Aliases
+  items:
+    - id: aliases
+      title: Aliases
 - title: Walkthrough
   items:
     - id: gettingStarted
