@@ -27,6 +27,8 @@ class Gnerate {
                 templatePath: path_1.resolve(__dirname, "../..", "__templates__"),
             },
         });
+        File_1.default.createDirectory("./__templates__");
+        console.log("\tDirectory __templates__ has been sucessfully generated!");
     }
     static run(argv) {
         if (argv.length === 0) {
