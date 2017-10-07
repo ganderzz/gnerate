@@ -64,32 +64,59 @@ class Gnerate {
             if (!templatePath) {
                 templatePath = this.resolveTemplatePath();
             }
-            const parameters = configContents && configContents.parameters || {};
-            const template = yield Gnerate.getTemplateString(templatePath, args.template);
-            try {
-                Gnerate.generateFileFromTemplate(template, parameters, args);
-            }
-            catch (exception) {
-                console.log(exception.toString());
+            const params = this.createParameters(configContents && configContents.parameters || {}, args);
+            if (configContents.alias && configContents.alias[args.template]) {
+                this.generateFromAlias(configContents.alias[args.template], templatePath, params, args.dest);
                 return;
             }
+            const template = yield Gnerate.getTemplateString(templatePath, args.template);
+            this.generateFileFromTemplate(template, params, args.dest);
             console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
         });
     }
-    static generateFileFromTemplate(template, parameters, args) {
+    static createParameters(parameters, args) {
+        const fileParts = Utilities_1.default.getFileNameAndExtension(args.dest);
+        return Object.assign({}, {
+            filename: fileParts[0],
+            fileExtension: fileParts[1],
+        }, this.getAdditionalParameters(parameters, args));
+    }
+    static generateFileFromTemplate(template, parameters, dest) {
         return __awaiter(this, void 0, void 0, function* () {
-            const fileParts = Utilities_1.default.getFileNameAndExtension(args.dest);
-            const renderedTemplate = nunjucks_1.renderString(template, Object.assign({}, {
-                filename: fileParts[0],
-                fileExtension: fileParts[1],
-            }, this.getAdditionalParameters(parameters, args)));
+            const renderedTemplate = nunjucks_1.renderString(template, parameters);
             try {
-                yield Gnerate.writeToDestination(renderedTemplate, args.dest);
+                yield Gnerate.writeToDestination(renderedTemplate, dest);
             }
             catch (exception) {
                 throw exception;
             }
         });
+    }
+    static createFilesFromTemplate(dest, template, parameters) {
+        const fileParts = Utilities_1.default.getFileNameAndExtension(dest);
+        try {
+            Gnerate.generateFileFromTemplate(template, parameters, dest);
+        }
+        catch (exception) {
+            console.log(exception.toString());
+            return;
+        }
+    }
+    static generateFromAlias(templatesToGenerate, templatePath, params, dest) {
+        const items = Object.keys(templatesToGenerate);
+        items.forEach((key) => __awaiter(this, void 0, void 0, function* () {
+            const template = yield Gnerate.getTemplateString(templatePath, key);
+            const filename = templatesToGenerate[key].filename;
+            const fileParts = Utilities_1.default.getFileNameAndExtension(filename);
+            try {
+                Gnerate.generateFileFromTemplate(template, params, dest + filename);
+                console.log(`\n\tFile ${dest + filename} has been sucessfully generated!`);
+            }
+            catch (exception) {
+                console.log(exception.toString());
+                return;
+            }
+        }));
     }
     static getAdditionalParameters(params, args) {
         const argParams = Object.keys(args).reduce((accu, item) => {
@@ -97,7 +124,7 @@ class Gnerate {
                 item !== "templatePath" &&
                 item !== "init" &&
                 item !== "template" &&
-                item !== "dist") {
+                item !== "dest") {
                 accu[item] = args[item];
             }
             return accu;
