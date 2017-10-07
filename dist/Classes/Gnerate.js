@@ -64,15 +64,22 @@ class Gnerate {
             if (!templatePath) {
                 templatePath = this.resolveTemplatePath();
             }
-            const parameters = configContents && configContents.parameters || {};
-            const template = yield Gnerate.getTemplateString(templatePath, args.template);
-            try {
-                Gnerate.generateFileFromTemplate(template, parameters, args);
+            let templatesToGenerate = [args.template];
+            const aliaskeys = configContents.alias;
+            if (configContents.alias && configContents.alias[args.template]) {
+                templatesToGenerate = configContents.alias[args.template];
             }
-            catch (exception) {
-                console.log(exception.toString());
-                return;
-            }
+            templatesToGenerate.forEach((item) => __awaiter(this, void 0, void 0, function* () {
+                const parameters = configContents && configContents.parameters || {};
+                const template = yield Gnerate.getTemplateString(templatePath, item);
+                try {
+                    Gnerate.generateFileFromTemplate(template, parameters, args);
+                }
+                catch (exception) {
+                    console.log(exception.toString());
+                    return;
+                }
+            }));
             console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
         });
     }
@@ -97,7 +104,7 @@ class Gnerate {
                 item !== "templatePath" &&
                 item !== "init" &&
                 item !== "template" &&
-                item !== "dist") {
+                item !== "dest") {
                 accu[item] = args[item];
             }
             return accu;

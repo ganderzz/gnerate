@@ -22,7 +22,7 @@ export default class Gnerate {
 
   /**
      * This is used when the --init argument is used.
-     * 
+     *
      * Gnerate uses itself, to build a config file!
      */
   public static initialize() {
@@ -35,13 +35,14 @@ export default class Gnerate {
     });
 
     File.createDirectory("./__templates__");
+
     console.log("\tDirectory __templates__ has been sucessfully generated!");
   }
 
   /**
      * Parse arguments, and kick of the gnerate process.
-     * 
-     * @param argv 
+     *
+     * @param argv
      */
   public static run(argv: string[]) {
     if (argv.length === 0) {
@@ -55,6 +56,7 @@ export default class Gnerate {
 
     if (args.init) {
       console.log("\nGenerating config file..");
+
       return this.initialize();
     }
 
@@ -74,8 +76,8 @@ export default class Gnerate {
      *  * Find the template file based on cli argument
      *  * Parse the template (Nunjucks) to a string
      *  * Write the parsed template to the specified location
-     * 
-     * @param args 
+     *
+     * @param args
      */
   public static async generate(args: IArguments) {
     let configContents: IConfig;
@@ -100,15 +102,24 @@ export default class Gnerate {
       templatePath = this.resolveTemplatePath();
     }
 
-    const parameters = configContents && configContents.parameters || {};
-    const template = await Gnerate.getTemplateString(templatePath, args.template);
+    let templatesToGenerate = [args.template];
+    const aliaskeys = configContents.alias;
 
-    try {
-      Gnerate.generateFileFromTemplate(template, parameters, args);
-    } catch (exception) {
-      console.log(exception.toString());
-      return;
+    if (configContents.alias && configContents.alias[args.template]) {
+      templatesToGenerate = configContents.alias[args.template];
     }
+
+    templatesToGenerate.forEach(async item => {
+      const parameters = configContents && configContents.parameters || {};
+      const template = await Gnerate.getTemplateString(templatePath, item);
+  
+      try {
+        Gnerate.generateFileFromTemplate(template, parameters, args);
+      } catch (exception) {
+        console.log(exception.toString());
+        return;
+      }
+    });
 
     console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
   }
@@ -138,13 +149,13 @@ export default class Gnerate {
   /**
    * Get additional parameters for nunjucks
    * to pass into the template as variables
-   * 
-   * @param config 
-   * @param args 
-   * 
+   *
+   * @param config
+   * @param args
+   *
    * @return {{ [key: string]: string }}
    */
-  private static getAdditionalParameters(
+  private static getAdditionalParameters<T>(
     params: { [key: string]: string },
     args: IArguments
   ): { [key: string]: string } {
@@ -157,11 +168,11 @@ export default class Gnerate {
             item !== "templatePath" &&
             item !== "init" &&
             item !== "template" &&
-            item !== "dist"
+            item !== "dest"
         ) {
             accu[item] = args[item] as string;
         }
-        
+
         return accu;
       }, {});
 
@@ -171,7 +182,7 @@ export default class Gnerate {
   /**
    * Attempt to find a __templates__ directory
    * in the root of the project.
-   * 
+   *
    * @return {string} The template file contents
    */
   private static resolveTemplatePath(): string {
@@ -188,12 +199,12 @@ export default class Gnerate {
   }
 
   /**
-     * Gets the contents of the gnerate config file
-     * 
-     * @param config 
-     * 
-     * @return {Promise<IConfig>}
-     */
+   * Gets the contents of the gnerate config file
+   *
+   * @param config
+   *
+   * @return {Promise<IConfig>}
+   */
   public static async getConfigContents(config: string | IConfig): Promise<IConfig> {
     let configContents: IConfig = null;
 
@@ -206,12 +217,12 @@ export default class Gnerate {
   }
 
   /**
-     * 
-     * @param destination 
-     * @param template 
-     * 
-     * @return {Promise<boolean>} Writes a template string to a file location
-     */
+   *
+   * @param destination
+   * @param template
+   *
+   * @return {Promise<boolean>} Writes a template string to a file location
+   */
   public static async writeToDestination(template: string, destination: string): Promise<boolean> {
     const output = new File(destination);
 
@@ -219,13 +230,13 @@ export default class Gnerate {
   }
 
   /**
-     * Find and read the contents of a specified template file.
-     * 
-     * @param templatePath 
-     * @param args 
-     * 
-     * @return {Promise<string>} The template as a string
-     */
+   * Find and read the contents of a specified template file.
+   *
+   * @param templatePath
+   * @param args
+   *
+   * @return {Promise<string>} The template as a string
+   */
   public static async getTemplateString(templatePath: string, templateName: string): Promise<string> {
     try {
       const templateFile = await Utilities.findTemplate(templatePath, templateName);
