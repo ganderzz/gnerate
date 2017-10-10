@@ -36,6 +36,15 @@ class Gnerate {
             return;
         }
         const args = Utilities_1.default.parseArguments(argv);
+        if (args.help || args.man) {
+            Gnerate.showManPage();
+            return;
+        }
+        if (args.version) {
+            const pkg = require("../../package.json");
+            console.log(`Gnerate: ${pkg.version}`);
+            return;
+        }
         if (args.init) {
             console.log("\nGenerating config file..");
             return this.initialize();
