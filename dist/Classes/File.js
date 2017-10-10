@@ -66,4 +66,3 @@ class File {
     }
 }
 exports.default = File;
-//# sourceMappingURL=File.js.map

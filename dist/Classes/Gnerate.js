@@ -10,14 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const nunjucks_1 = require("nunjucks");
-const fs_1 = require("fs");
 const Utilities_1 = require("./Utilities");
 const File_1 = require("./File");
 class Gnerate {
     static showManPage() {
         console.log("==========  gnerate  ==========");
         console.log("gnerate --init - Initializes the project with a gnerate config");
-        console.log("gnerate [templateName] [path/name]  -  Generate a new file from a template to a path relative to the cwd.");
+        console.log("gnerate [templateName] [destination]  -  Generate a new file from a template to a path relative to the cwd.");
     }
     static initialize() {
         Gnerate.generate({
@@ -41,8 +40,12 @@ class Gnerate {
             console.log("\nGenerating config file..");
             return this.initialize();
         }
-        if (!args.template || !args.dest) {
-            console.log("\n[template] or [destination] missing in rgen command.");
+        if (!args.template) {
+            console.log("\nTemplate name was not provided to gnerate.");
+            return;
+        }
+        if (!args.dest) {
+            console.log("\nDestination was not provided to gnerate.");
             return;
         }
         return Gnerate.generate(args);
@@ -62,16 +65,27 @@ class Gnerate {
                 templatePath = configContents && configContents.templatePath;
             }
             if (!templatePath) {
-                templatePath = this.resolveTemplatePath();
+                try {
+                    templatePath = this.resolveTemplatePath();
+                }
+                catch (exception) {
+                    console.log(exception);
+                    return;
+                }
             }
             const params = this.createParameters(configContents && configContents.parameters || {}, args);
-            if (configContents.alias && configContents.alias[args.template]) {
+            if (configContents && configContents.alias && configContents.alias[args.template]) {
                 this.generateFromAlias(configContents.alias[args.template], templatePath, params, args.dest);
                 return;
             }
-            const template = yield Gnerate.getTemplateString(templatePath, args.template);
-            this.generateFileFromTemplate(template, params, args.dest);
-            console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
+            try {
+                const template = yield Gnerate.getTemplateString(templatePath, args.template);
+                yield this.generateFileFromTemplate(template, params, args.dest);
+                console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
+            }
+            catch (exception) {
+                console.log(exception.toString());
+            }
         });
     }
     static createParameters(parameters, args) {
@@ -85,22 +99,14 @@ class Gnerate {
         return __awaiter(this, void 0, void 0, function* () {
             const renderedTemplate = nunjucks_1.renderString(template, parameters);
             try {
-                yield Gnerate.writeToDestination(renderedTemplate, dest);
+                return yield Gnerate.writeToDestination(renderedTemplate, dest);
             }
             catch (exception) {
-                throw exception;
+                throw `\nCould not write template to (${exception.path})` +
+                    `\nMaybe invalid permissions, or trying to write over a directory?` +
+                    `\n\n${exception}`;
             }
         });
-    }
-    static createFilesFromTemplate(dest, template, parameters) {
-        const fileParts = Utilities_1.default.getFileNameAndExtension(dest);
-        try {
-            Gnerate.generateFileFromTemplate(template, parameters, dest);
-        }
-        catch (exception) {
-            console.log(exception.toString());
-            return;
-        }
     }
     static generateFromAlias(templatesToGenerate, templatePath, params, dest) {
         const items = Object.keys(templatesToGenerate);
@@ -110,7 +116,7 @@ class Gnerate {
             const fileParts = Utilities_1.default.getFileNameAndExtension(filename);
             try {
                 Gnerate.generateFileFromTemplate(template, params, dest + filename);
-                console.log(`\n\tFile ${dest + filename} has been sucessfully generated!`);
+                console.log(`\tFile ${dest + filename} has been sucessfully generated!`);
             }
             catch (exception) {
                 console.log(exception.toString());
@@ -132,22 +138,19 @@ class Gnerate {
         return Object.assign({}, params, argParams);
     }
     static resolveTemplatePath() {
-        const getDirectories = (source) => fs_1.readdirSync(source).map(name => path_1.join(source, name));
-        const path = path_1.resolve(process.cwd(), "__templates__");
-        const foundTemplates = getDirectories(path);
-        if (!foundTemplates || foundTemplates.length > 1) {
-            throw "Could not find a __templates__ directory, or config file containing templates path.";
-        }
-        return path;
+        return path_1.resolve(process.cwd(), "__templates__");
     }
-    static getConfigContents(config) {
+    static getConfigContents(config = null) {
         return __awaiter(this, void 0, void 0, function* () {
-            let configContents = null;
-            if (config) {
-                configContents =
-                    typeof config === "string" ? yield Utilities_1.default.getFileContents(config) : config;
+            try {
+                const parsedConfig = typeof config === "string" ?
+                    yield Utilities_1.default.getFileContents(config) :
+                    config;
+                return parsedConfig || null;
             }
-            return configContents;
+            catch (exception) {
+                throw exception;
+            }
         });
     }
     static writeToDestination(template, destination) {
@@ -163,13 +166,10 @@ class Gnerate {
                 return yield templateFile.getContents();
             }
             catch (exception) {
-                throw `
-                Could not find the template: ${templatePath}/${templateName}.
-                [Error]: ${exception}
-            `;
+                throw `\n\nCould not find the template: ${templatePath}/${templateName}.` +
+                    `\nEither the template doesn't exist, or an alias name is missing.`;
             }
         });
     }
 }
 exports.default = Gnerate;
-//# sourceMappingURL=Gnerate.js.map

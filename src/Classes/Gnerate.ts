@@ -11,13 +11,13 @@ import IAlias from "../Interfaces/IAlias";
 export default class Gnerate {
   // #region Static Methods
   /**
-     * Show instructions on how to use Gnerate
-     */
+   * Show instructions on how to use Gnerate
+   */
   public static showManPage() {
     console.log("==========  gnerate  ==========");
     console.log("gnerate --init - Initializes the project with a gnerate config");
     console.log(
-      "gnerate [templateName] [path/name]  -  Generate a new file from a template to a path relative to the cwd."
+      "gnerate [templateName] [destination]  -  Generate a new file from a template to a path relative to the cwd."
     );
   }
 
@@ -61,9 +61,15 @@ export default class Gnerate {
       return this.initialize();
     }
 
-    if (!args.template || !args.dest) {
-      console.log("\n[template] or [destination] missing in rgen command.");
+    if (!args.template) {
+      console.log("\nTemplate name was not provided to gnerate.");
 
+      return;
+    }
+
+    if (!args.dest) {
+      console.log("\nDestination was not provided to gnerate.");
+      
       return;
     }
 
@@ -100,7 +106,12 @@ export default class Gnerate {
     if(!templatePath) {
       // If neither the terminal or config file have the template
       // directory path, try to find a __templates__ directory ourselves
-      templatePath = this.resolveTemplatePath();
+      try {
+        templatePath = this.resolveTemplatePath();
+      } catch (exception) {
+        console.log(exception);
+        return;
+      }
     }
 
     const params = this.createParameters(
@@ -108,16 +119,21 @@ export default class Gnerate {
       args
     );
 
-    if (configContents.alias && configContents.alias[args.template]) {
+    if (configContents && configContents.alias && configContents.alias[args.template]) {
       this.generateFromAlias(configContents.alias[args.template], templatePath, params, args.dest);
 
       return;
     }
 
-    const template = await Gnerate.getTemplateString(templatePath, args.template);
-    this.generateFileFromTemplate(template, params, args.dest);
+    try {
+      const template = await Gnerate.getTemplateString(templatePath, args.template);
+      
+      await this.generateFileFromTemplate(template, params, args.dest);
 
-    console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
+      console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
+    } catch (exception) {
+      console.log(exception.toString());
+    }
   }
 
   /**
@@ -151,9 +167,11 @@ export default class Gnerate {
     const renderedTemplate = renderString(template, parameters);
 
     try {
-      await Gnerate.writeToDestination(renderedTemplate, dest);
+      return await Gnerate.writeToDestination(renderedTemplate, dest);
     } catch (exception) {
-      throw exception;
+      throw `\nCould not write template to (${exception.path})` +
+            `\nMaybe invalid permissions, or trying to write over a directory?` +
+            `\n\n${exception}`;
     }
   }
 
@@ -225,16 +243,7 @@ export default class Gnerate {
    * @return {string} The template file contents
    */
   private static resolveTemplatePath(): string {
-    const getDirectories = (source: string) => readdirSync(source).map(name => join(source, name));
-
-    const path = resolve(process.cwd(), "__templates__");
-    const foundTemplates = getDirectories(path);
-
-    if (!foundTemplates || foundTemplates.length > 1) {
-      throw "Could not find a __templates__ directory, or config file containing templates path.";
-    }
-
-    return path;
+    return resolve(process.cwd(), "__templates__");
   }
 
   /**
@@ -244,15 +253,16 @@ export default class Gnerate {
    *
    * @return {Promise<IConfig>}
    */
-  public static async getConfigContents(config: string | IConfig): Promise<IConfig> {
-    let configContents: IConfig = null;
-
-    if (config) {
-      configContents =
-        typeof config === "string" ? await Utilities.getFileContents(config) : config;
+  public static async getConfigContents(config: string | IConfig = null): Promise<IConfig> {
+    try {
+      const parsedConfig = typeof config === "string" ?
+                              await Utilities.getFileContents(config) :
+                              config;
+      
+      return parsedConfig || null;
+    } catch (exception) {
+      throw exception;
     }
-
-    return configContents;
   }
 
   /**
@@ -282,10 +292,8 @@ export default class Gnerate {
 
       return await templateFile.getContents();
     } catch (exception) {
-      throw `
-                Could not find the template: ${templatePath}/${templateName}.
-                [Error]: ${exception}
-            `;
+      throw `\n\nCould not find the template: ${templatePath}/${templateName}.` +
+            `\nEither the template doesn't exist, or an alias name is missing.`;
     }
   }
   // #endregion
