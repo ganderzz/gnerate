@@ -7,12 +7,12 @@ import File from "./File";
 export default class Utilities {
   // #region Static Methods
   /**
-     * Parses arguments, and returns as a json representation
-     * 
-     * @param args 
-     * 
-     * @return {IArguments}
-     */
+   * Parses arguments, and returns as a json representation
+   * 
+   * @param args 
+   * 
+   * @return {IArguments}
+   */
   public static parseArguments(args: string[]): IArguments {
     return args.reduce((accu: IArguments, current: string) => {
       // Parse out options if they exist
@@ -47,16 +47,16 @@ export default class Utilities {
   }
 
   /**
-     * Searches the templatePath for a template containing a substring of `templateName`.
-     * 
-     * If filter = 0 or filter > 1: Reject the promise as we are only looking for one component
-     * filter = 1: Get the location of the file and return it
-     * 
-     * @param templatePath 
-     * @param templateName 
-     * 
-     * @return {Promise<File>}
-     */
+   * Searches the templatePath for a template containing a substring of `templateName`.
+   * 
+   * If filter = 0 or filter > 1: Reject the promise as we are only looking for one component
+   * filter = 1: Get the location of the file and return it
+   * 
+   * @param templatePath 
+   * @param templateName 
+   * 
+   * @return {Promise<File>}
+   */
   public static async findTemplate(templatePath: string, templateName: string): Promise<File> {
     return new Promise<File>((resolve, reject) =>
       fs.readdir(templatePath, (error: NodeJS.ErrnoException, files: string[]) => {
@@ -72,12 +72,12 @@ export default class Utilities {
   }
 
   /**
-     * Reads in the contents of a file
-     * 
-     * @param configPath 
-     * 
-     * @return {string}
-     */
+   * Reads in the contents of a file
+   * 
+   * @param configPath 
+   * 
+   * @return {string}
+   */
   public static async getFileContents(filePath: string): Promise<IConfig> {
     const file = new File(filePath);
 
@@ -85,14 +85,19 @@ export default class Utilities {
       throw `Could not find file: ${filePath}`;
     }
 
-    return await require(file.toString());
+    try {
+      return await require(file.toString());
+    } catch (exception) {
+      console.log(exception.toString())
+      throw exception;
+    }
   }
 
   /**
-     * Parses out the filename/file extension
-     * 
-     * @param filename 
-     */
+   * Parses out the filename/file extension
+   * 
+   * @param filename 
+   */
   public static getFileNameAndExtension(filename: string): string[] {
     return filename.replace(/^.*[\\\/]/, "").split(".");
   }

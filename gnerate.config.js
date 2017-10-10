@@ -1,5 +1,5 @@
 const path = require("path");
 
-modules.export = {
+module.exports = {
     templatePath: path.resolve(__dirname, "./__templates__"),
 };

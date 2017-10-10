@@ -43,7 +43,13 @@ class Utilities {
             if (!file.exists()) {
                 throw `Could not find file: ${filePath}`;
             }
-            return yield require(file.toString());
+            try {
+                return yield require(file.toString());
+            }
+            catch (exception) {
+                console.log(exception.toString());
+                throw exception;
+            }
         });
     }
     static getFileNameAndExtension(filename) {
@@ -51,4 +57,3 @@ class Utilities {
     }
 }
 exports.default = Utilities;
-//# sourceMappingURL=Utilities.js.map
