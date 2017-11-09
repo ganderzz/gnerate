@@ -14,11 +14,19 @@ export default class Gnerate {
    * Show instructions on how to use Gnerate
    */
   public static showManPage() {
-    console.log("==========  gnerate  ==========");
-    console.log("gnerate --init - Initializes the project with a gnerate config");
+    console.log("\n");
+    console.log("gnerate");
     console.log(
-      "gnerate [templateName] [destination]  -  Generate a new file from a template to a path relative to the cwd."
+      "\t[templateName] [destination]\n\t\tGenerate a new file from a template to a path relative to the cwd.\n"
     );
+    console.log("\t--init\n\t\tInitializes the project with a gnerate config.\n");
+    console.log("\t--help\n\t\tGet help on the functionality of gnerate.\n");
+    console.log("\t--config=[configPath]\n\t\tGive gnerate a path to a config file.\n");
+    console.log("\t--templatePath=[templatesDirectory]\n\t\tDefine a custom path to the templates directory.\n");
+    console.log("\t--[paramKey]=[value]\n\t\tAdd additional variables to templates.\n")
+    
+    console.log("\n\nView more detailed docs at: http://dylanpaulus.com/gnerate/");
+    console.log("\n");
   }
 
   /**
