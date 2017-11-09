@@ -22,7 +22,6 @@
     "commandline"
   ],
   "author": "Dylan Paulus",
-  "license": "ISC",
   "dependencies": {
     "nunjucks": "^3.0.1"
   },

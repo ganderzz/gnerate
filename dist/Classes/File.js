@@ -39,6 +39,11 @@ class File {
             return new Promise((resolve, reject) => {
                 fs.writeFile(`${this._filename}`, data, (error) => {
                     if (error) {
+                        if (error.code === "EISDIR") {
+                            console.log(`Trying to write: \n\t${this._filename}`);
+                            console.log(`But should be: \n\t${this._filename}/[filename].[extension]`);
+                            reject("");
+                        }
                         reject(error);
                     }
                     resolve(true);
@@ -62,6 +67,9 @@ class File {
     static createDirectory(directoryName) {
         if (!fs.existsSync(directoryName)) {
             fs.mkdirSync(directoryName);
+        }
+        else {
+            console.log(`Directory ${directoryName} already exists.`);
         }
     }
 }

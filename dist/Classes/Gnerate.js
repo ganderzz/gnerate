@@ -90,7 +90,7 @@ class Gnerate {
             try {
                 const template = yield Gnerate.getTemplateString(templatePath, args.template);
                 yield this.generateFileFromTemplate(template, params, args.dest);
-                console.log(`\n\n\tFile ${args.dest} has been sucessfully generated!\n\n`);
+                console.log(`\n\t${args.dest} has been sucessfully generated!\n\n`);
             }
             catch (exception) {
                 console.log(exception.toString());

@@ -5,11 +5,11 @@ export default class File {
   public constructor(filename: string) {
     this._filename = path.resolve(filename);
   }
-  
+
   // #region Public Methods
   /**
      * Check if the file exists
-     * 
+     *
      * @return {boolean}
      */
   public exists(): boolean {
@@ -19,7 +19,7 @@ export default class File {
   /**
      * Gets the contents of a file, and attempts
      * to parse it as JSON
-     * 
+     *
      * @return {Promise<T>}
      */
   async getJSONContents<T>(): Promise<T> {
@@ -37,7 +37,7 @@ export default class File {
 
   /**
      * Gets the contents of a file
-     * 
+     *
      * @return {Promise<string>}
      */
   async getContents(): Promise<string> {
@@ -46,15 +46,23 @@ export default class File {
 
   /**
      * Write data to the a location
-     * 
-     * @param data 
-     * 
+     *
+     * @param data
+     *
      * @return {Promise<boolean>}
      */
   async writeContents(data: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       fs.writeFile(`${this._filename}`, data, (error: NodeJS.ErrnoException) => {
         if (error) {
+          if (error.code === "EISDIR") {
+            console.log(`Trying to write: \n\t${this._filename}`);
+            console.log(`But should be: \n\t${this._filename}/[filename].[extension]`);
+
+            // Hide default error
+            reject("");
+          }
+
           reject(error);
         }
 
@@ -75,7 +83,7 @@ export default class File {
      * Node implementation of reading a file.
      * Both getJSONContents() and getContents() use this
      * as a base method.
-     * 
+     *
      * @return {Promise<Buffer>}
      */
     private async _readFile(): Promise<Buffer> {
@@ -84,7 +92,7 @@ export default class File {
           if (error) {
             reject(error);
           }
-  
+
           return resolve(data);
         })
       );
@@ -93,12 +101,14 @@ export default class File {
   // #region Static Methods
   /**
    * Create a directory with a given name
-   * 
-   * @param directoryName 
+   *
+   * @param directoryName
    */
   public static createDirectory(directoryName: string) {
     if (!fs.existsSync(directoryName)) {
       fs.mkdirSync(directoryName);
+    } else {
+      console.log(`Directory ${directoryName} already exists.`);
     }
   }
   // #endregion
