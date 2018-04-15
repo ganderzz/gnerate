@@ -17,6 +17,14 @@ class Utilities {
                 const keyValue = current.split("--")[1].split("=");
                 return Object.assign({ [keyValue[0]]: keyValue[1] || true }, accu);
             }
+            switch (current.toLocaleLowerCase()) {
+                case "init":
+                    return Object.assign({}, accu, { init: true });
+                case "version":
+                    return Object.assign({}, accu, { version: true });
+                case "help":
+                    return Object.assign({}, accu, { help: true });
+            }
             if (!accu.template) {
                 return Object.assign({ template: current }, accu);
             }

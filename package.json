@@ -1,6 +1,6 @@
 {
   "name": "gnerate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Command-line tool for generating files",
   "main": "./dist/index.js",
   "license": "MIT",
@@ -12,7 +12,7 @@
   "scripts": {
     "build": "rm -rf ./dist/* && ./node_modules/typescript/bin/tsc",
     "test": "./node_modules/.bin/jest",
-    "generate": "./node_modules/typescript/bin/tsc & node ./dist/index.js base example/ --config=example/gnerate.config.js --param=3 --keysCanBeAnything=additionalParam"
+    "gnerate": "./node_modules/typescript/bin/tsc & node ./dist/index.js --config=example/gnerate.config.js"
   },
   "keywords": [
     "gnerate",
@@ -23,18 +23,16 @@
   ],
   "author": "Dylan Paulus",
   "dependencies": {
-    "nunjucks": "^3.0.1"
+    "nunjucks": "^3.1.2"
   },
   "devDependencies": {
-    "@types/jest": "^20.0.8",
-    "@types/node": "^8.0.26",
-    "@types/nunjucks": "^0.0.33",
-    "eslint": "^4.6.1",
-    "eslint-config-prettier": "^2.4.0",
-    "jest": "^21.0.2",
-    "prettier": "^1.6.1",
-    "ts-jest": "^21.0.0",
-    "typescript": "^2.5.2"
+    "@types/jest": "^22.2.3",
+    "@types/node": ">=8.0.26",
+    "@types/nunjucks": "^3.0.0",
+    "jest": "^22.4.3",
+    "prettier": "^1.12.0",
+    "ts-jest": "^22.4.2",
+    "typescript": "^2.8.1"
   },
   "jest": {
     "transform": {
