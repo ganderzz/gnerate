@@ -26,6 +26,26 @@ export default class Utilities {
         };
       }
 
+      switch (current.toLocaleLowerCase()) {
+        case "init":
+          return {
+            ...accu,
+            init: true,
+          };
+
+        case "version":
+          return {
+            ...accu,
+            version: true,
+          };
+
+        case "help":
+        return {
+          ...accu,
+          help: true,
+        }
+      }
+
       // Assume first non-option value will always be the template name
       if (!accu.template) {
         return {

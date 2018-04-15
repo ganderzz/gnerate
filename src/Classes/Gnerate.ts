@@ -3,6 +3,7 @@ import { renderString } from "nunjucks";
 import { lstatSync, readdirSync } from "fs";
 import Utilities from "./Utilities";
 import File from "./File";
+const Package = require("../../package.json");
 
 import IArguments from "../Interfaces/IArguments";
 import IConfig from "../Interfaces/IConfig";
@@ -14,19 +15,19 @@ export default class Gnerate {
    * Show instructions on how to use Gnerate
    */
   public static showManPage() {
-    console.log("\n");
-    console.log("gnerate");
-    console.log(
-      "\t[templateName] [destination]\n\t\tGenerate a new file from a template to a path relative to the cwd.\n"
-    );
-    console.log("\t--init\n\t\tInitializes the project with a gnerate config.\n");
-    console.log("\t--help\n\t\tGet help on the functionality of gnerate.\n");
-    console.log("\t--config=[configPath]\n\t\tGive gnerate a path to a config file.\n");
-    console.log("\t--templatePath=[templatesDirectory]\n\t\tDefine a custom path to the templates directory.\n");
-    console.log("\t--[paramKey]=[value]\n\t\tAdd additional variables to templates.\n")
-    
-    console.log("\n\nView more detailed docs at: http://dylanpaulus.com/gnerate/");
-    console.log("\n");
+    console.log(`      Gnerate (${Package.version})
+
+      gnerate [templateName] [destination]   Generate a new file from a template to a path relative to the cwd.
+
+      Commands
+        init   Initializes the project with a gnerate config.
+        help   Get help on the functionality of gnerate.
+
+      Parameters
+        --config=[configPath]   Give gnerate a path to a config file.
+        --templatePath=[templateDirectory]   Define a custom path to the templates directory.
+        --[paramKey]=[value]   Add additional variables to the template.
+    `);
   }
 
   /**
@@ -70,9 +71,7 @@ export default class Gnerate {
     }
 
     if (args.version) {
-      const pkg = require("../../package.json");
-
-      console.log(`Gnerate: ${pkg.version}`);
+      console.log(Package.version);
       return;
     }
 

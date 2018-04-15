@@ -18,7 +18,7 @@ The template name always comes first, followed by the location in which we will 
 
 Everything that can be done through a config file, can also be provided through command line arguments.
 
-`--init`: Creates the scaffolding for Gnerate. This includes a **gnerate.config.js** file, and a **__templates__** directory. Both the config file, and directory will be placed in the location the command is ran from.
+`init`: Creates the scaffolding for Gnerate. This includes a **gnerate.config.js** file, and a **__templates__** directory. Both the config file, and directory will be placed in the location the command is ran from.
 
 `--config=[configPath]`: Provide the path to a gnerate config file
 

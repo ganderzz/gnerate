@@ -22,6 +22,6 @@ There are two ways to use Gnerate. The first, creating a **gnerate.config.js** f
 
 Let's initialize Gnerate in our project.
 
-In the root directory, run: `gnerate --init`
+In the root directory, run: `gnerate init`
 
-The `--init` argument creates a new **__templates__** directory in the location the command is ran from. It will also create a **gnerate.config.js** file that links Gnerate to the **__templates** directory.
+The `init` argument creates a new **__templates__** directory in the location the command is ran from. It will also create a **gnerate.config.js** file that links Gnerate to the **__templates** directory.

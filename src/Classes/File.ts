@@ -77,6 +77,7 @@ export default class File {
   public toString(): string {
     return this._filename.toString();
   }
+  
   // #endregion
   // #region Private Methods
   /**
