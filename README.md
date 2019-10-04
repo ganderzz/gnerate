@@ -1,4 +1,4 @@
-<h1 align="center">
+<h1 align="left">
     gnerate
 </h1>
 
@@ -6,7 +6,7 @@
 
 ### Getting Started
 
-Gnerate is a cli generation tool to help reduce boilerplate. This is achieved by creating templates, and then referencing those templates whenever we want to create a new file.
+`Gnerate is a cli generation tool to help reduce boilerplate. This is achieved by creating templates, and then referencing those templates whenever we want to create a new file.`
 
 ### Installing Gnerate
 
