@@ -10,9 +10,9 @@
   },
   "bin": "./dist/index.js",
   "scripts": {
-    "build": "rm -rf ./dist/* && ./node_modules/typescript/bin/tsc",
-    "test": "./node_modules/.bin/jest",
-    "gnerate": "./node_modules/typescript/bin/tsc & node ./dist/index.js --config=example/gnerate.config.js"
+    "build": "rm -rf ./dist/* && tsc",
+    "test": "jest",
+    "gnerate": "tsc & node ./dist/index.js --config=example/gnerate.config.js"
   },
   "keywords": [
     "gnerate",
