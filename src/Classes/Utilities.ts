@@ -3,6 +3,7 @@ import * as fs from "fs";
 import IArguments from "../Interfaces/IArguments";
 import IConfig from "../Interfaces/IConfig";
 import File from "./File";
+import IFileName from "../Interfaces/IFileName";
 
 export default class Utilities {
   // #region Static Methods
@@ -40,10 +41,10 @@ export default class Utilities {
           };
 
         case "help":
-        return {
-          ...accu,
-          help: true,
-        }
+          return {
+            ...accu,
+            help: true,
+          }
       }
 
       // Assume first non-option value will always be the template name
@@ -63,7 +64,7 @@ export default class Utilities {
       }
 
       return accu;
-    }, {}) as IArguments;
+    }, {} as IArguments) as IArguments;
   }
 
   /**
@@ -116,10 +117,18 @@ export default class Utilities {
   /**
    * Parses out the filename/file extension
    * 
-   * @param filename 
+   * @param filename
+   * 
+   * @return {IFileName}
    */
-  public static getFileNameAndExtension(filename: string): string[] {
-    return filename.replace(/^.*[\\\/]/, "").split(".");
+  public static getFileNameAndExtension(filename: string): IFileName {
+    const file = filename.replace(/^.*[\\\/]/, "");
+    const lastDotPosition = file.lastIndexOf('.');
+
+    return {
+      name: file.substr(0, lastDotPosition),
+      extension: file.substr(lastDotPosition + 1, file.length - lastDotPosition)
+    };
   }
   // #endregion
 }
