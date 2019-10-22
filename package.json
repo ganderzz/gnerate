@@ -45,6 +45,7 @@
       "js",
       "jsx",
       "json"
-    ]
+    ],
+    "testURL": "http://localhost/"
   }
 }

@@ -1,6 +1,5 @@
-import { resolve, join } from "path";
+import { resolve } from "path";
 import { renderString } from "nunjucks";
-import { lstatSync, readdirSync } from "fs";
 import Utilities from "./Utilities";
 import File from "./File";
 const Package = require("../../package.json");
@@ -89,7 +88,7 @@ export default class Gnerate {
 
     if (!args.dest) {
       console.log("\nDestination was not provided to gnerate.");
-      
+
       return;
     }
 
@@ -123,7 +122,7 @@ export default class Gnerate {
       // If the terminal doesn't contain a templatePath, check the config file
       templatePath = configContents && configContents.templatePath;
     }
-    if(!templatePath) {
+    if (!templatePath) {
       // If neither the terminal or config file have the template
       // directory path, try to find a __templates__ directory ourselves
       try {
@@ -147,7 +146,7 @@ export default class Gnerate {
 
     try {
       const template = await Gnerate.getTemplateString(templatePath, args.template);
-      
+
       await this.generateFileFromTemplate(template, params, args.dest);
 
       console.log(`\n\t${args.dest} has been sucessfully generated!\n\n`);
@@ -169,8 +168,8 @@ export default class Gnerate {
     return Object.assign(
       {},
       {
-        filename: fileParts[0],
-        fileExtension: fileParts[1],
+        filename: fileParts.name,
+        fileExtension: fileParts.extension,
       },
       this.getAdditionalParameters(parameters, args)
     )
@@ -190,8 +189,8 @@ export default class Gnerate {
       return await Gnerate.writeToDestination(renderedTemplate, dest);
     } catch (exception) {
       throw `\nCould not write template to (${exception.path})` +
-            `\nMaybe invalid permissions, or trying to write over a directory?` +
-            `\n\n${exception}`;
+      `\nMaybe invalid permissions, or trying to write over a directory?` +
+      `\n\n${exception}`;
     }
   }
 
@@ -206,12 +205,11 @@ export default class Gnerate {
    */
   private static generateFromAlias(templatesToGenerate: IAlias, templatePath: string, params: {}, dest: string) {
     const items = Object.keys(templatesToGenerate);
-    
+
     items.forEach(async key => {
       const template = await Gnerate.getTemplateString(templatePath, key);
       const filename = templatesToGenerate[key].filename;
-      const fileParts = Utilities.getFileNameAndExtension(filename);
-  
+
       try {
         Gnerate.generateFileFromTemplate(template, params, dest + filename);
 
@@ -236,24 +234,24 @@ export default class Gnerate {
     params: { [key: string]: string },
     args: IArguments
   ): { [key: string]: string } {
-      const argParams = Object.keys(args).reduce((accu: { [key: string]: string}, item: string) => {
-        // Only pull out additional parameter
-        // arguments from the cli
-        // @todo: Find a cleaner way to get it from the interface?
-        if (
-            item !== "config" &&
-            item !== "templatePath" &&
-            item !== "init" &&
-            item !== "template" &&
-            item !== "dest"
-        ) {
-            accu[item] = args[item] as string;
-        }
+    const argParams = Object.keys(args).reduce((accu: { [key: string]: string }, item: string) => {
+      // Only pull out additional parameter
+      // arguments from the cli
+      // @todo: Find a cleaner way to get it from the interface?
+      if (
+        item !== "config" &&
+        item !== "templatePath" &&
+        item !== "init" &&
+        item !== "template" &&
+        item !== "dest"
+      ) {
+        accu[item] = args[item] as string;
+      }
 
-        return accu;
-      }, {});
+      return accu;
+    }, {});
 
-      return Object.assign({}, params, argParams);
+    return Object.assign({}, params, argParams);
   }
 
   /**
@@ -276,9 +274,9 @@ export default class Gnerate {
   public static async getConfigContents(config: string | IConfig = null): Promise<IConfig> {
     try {
       const parsedConfig = typeof config === "string" ?
-                              await Utilities.getFileContents(config) :
-                              config;
-      
+        await Utilities.getFileContents(config) :
+        config;
+
       return parsedConfig || null;
     } catch (exception) {
       throw exception;
@@ -313,7 +311,7 @@ export default class Gnerate {
       return await templateFile.getContents();
     } catch (exception) {
       throw `\n\nCould not find the template: ${templatePath}/${templateName}.` +
-            `\nEither the template doesn't exist, or an alias name is missing.`;
+      `\nEither the template doesn't exist, or an alias name is missing.`;
     }
   }
   // #endregion
